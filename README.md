@@ -1,13 +1,73 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# Gym Client Application
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-    - `commonMain` is for code that’s common for all targets.
-    - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-      For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-      `iosMain` would be the right folder for such calls.
+<div align="center">
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+![Kotlin](https://img.shields.io/badge/kotlin-%2320232a.svg?style=for-the-badge&logo=kotlin)
+![Kotlin multiplatform](https://img.shields.io/badge/Kotlinmultiplatform-%2320232a.svg?style=for-the-badge&logo=jetpackcompose)
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+</div>
+
+## Overview
+A comprehensive mobile application for gym members to manage memberships, track fitness goals, book classes/training sessions, and handle payments. Built with Kotlin Multiplatform for cross-platform compatibility and real-time data synchronization.
+
+
+
+## Features
+
+### 🔐 Authentication & Security
+- Phone/email login with country code selector
+- 4-step member registration with ID verification
+- OTP-based password reset
+- Medical history capture during onboarding
+
+### 🏋️‍♂️ Fitness Management
+- **Dashboard:**
+    - Membership status display
+    - Fitness goal tracker with progress visualization
+    - Upcoming classes/personal training sessions
+- **Body & Goals Tracking:**
+    - Weight/BF%/measurement logging
+    - Historical data graphs
+    - Goal setting and achievement badges
+
+### 📅 Booking System
+- **Class Booking:**
+    - Browse available classes (yoga, HIIT, cycling)
+    - Filter by time/trainer/difficulty
+- **Personal Training:**
+    - Trainer selection with ratings
+    - Session type customization
+    - Real-time booking status (Accepted/Rejected/Pending)
+
+### 💳 Payment Integration
+- Payment plan selection (Basic/Pro/Premium)
+- Stripe integration for secure transactions
+- Promo code application
+- Membership renewal reminders
+
+### 🛠 Utility Features
+- QR code generation for gym access
+- Emergency contact information
+- Notification center for updates and reminders
+- Medical condition disclosure to trainers
+
+
+## Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a pull request
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+**Contact**  
+Project Lead: [Amin Elhag](mailto:amingalalelhag@gmail.com)  
+Project Repository: [github.com/AminElhag/crispy-goggles](https://github.com/AminElhag/crispy-goggles.git)
