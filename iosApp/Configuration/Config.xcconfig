@@ -1,6 +1,6 @@
 TEAM_ID=
 
-PRODUCT_NAME=mobile_client_app
+PRODUCT_NAME=Jeem
 PRODUCT_BUNDLE_IDENTIFIER=com.example.mobile_client_app.mobile_client_app$(TEAM_ID)
 
 CURRENT_PROJECT_VERSION=1
