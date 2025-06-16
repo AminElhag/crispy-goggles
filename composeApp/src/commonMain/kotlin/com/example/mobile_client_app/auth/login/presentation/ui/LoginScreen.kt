@@ -18,12 +18,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.login_main_image
 import mobile_client_app.composeapp.generated.resources.saudi_arabia
 import mobile_client_app.composeapp.generated.resources.sudan
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 data class Country(
     val name: String,
@@ -33,8 +35,7 @@ data class Country(
 
 @Composable
 fun LoginScreen(
-    modifier: Modifier = Modifier.fillMaxSize()
-        .background(MaterialTheme.colorScheme.background),
+    viewModel: LoginScreenViewModel = koinViewModel()
 ) {
     var isPhoneSelected by remember { mutableStateOf(true) }
     var isExpanded by remember { mutableStateOf(false) }
@@ -48,69 +49,70 @@ fun LoginScreen(
 
     Scaffold {
         Column(
-            modifier = modifier,
+            modifier = Modifier.fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column {
-            Image(
-                painter = painterResource(Res.drawable.login_main_image), // Replace with your actual image resource
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                contentScale = ContentScale.Crop
-            )
-            Text(
-                text = "Welcome back",
-                style = MaterialTheme.typography.headlineLarge.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                textAlign = TextAlign.Center
-            )
-            Card(
-                shape = RoundedCornerShape(25),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
-                Row(
+                Image(
+                    painter = painterResource(Res.drawable.login_main_image), // Replace with your actual image resource
+                    contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .height(200.dp),
+                    contentScale = ContentScale.Crop
+                )
+                Text(
+                    text = "Welcome back",
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+                Card(
+                    shape = RoundedCornerShape(25),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 ) {
-                    Button(
-                        onClick = { isPhoneSelected = true },
-                        shape = RoundedCornerShape(30),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isPhoneSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceContainerHighest
-                        ),
-                        modifier = Modifier.weight(1f),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = "Phone",
-                            color = if (isPhoneSelected) MaterialTheme.colorScheme.scrim else MaterialTheme.colorScheme.tertiary
-                        )
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    Button(
-                        onClick = { isPhoneSelected = false },
-                        shape = RoundedCornerShape(30),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (!isPhoneSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceContainerHighest
-                        ),
-                        modifier = Modifier.weight(1f),
-                    ) {
-                        Text(
-                            text = "Email",
-                            color = if (!isPhoneSelected) MaterialTheme.colorScheme.scrim else MaterialTheme.colorScheme.tertiary
-                        )
+                        Button(
+                            onClick = { isPhoneSelected = true },
+                            shape = RoundedCornerShape(30),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isPhoneSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceContainerHighest
+                            ),
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Text(
+                                text = "Phone",
+                                color = if (isPhoneSelected) MaterialTheme.colorScheme.scrim else MaterialTheme.colorScheme.tertiary
+                            )
+                        }
+                        Spacer(Modifier.width(8.dp))
+                        Button(
+                            onClick = { isPhoneSelected = false },
+                            shape = RoundedCornerShape(30),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (!isPhoneSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.surfaceContainerHighest
+                            ),
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            Text(
+                                text = "Email",
+                                color = if (!isPhoneSelected) MaterialTheme.colorScheme.scrim else MaterialTheme.colorScheme.tertiary
+                            )
+                        }
                     }
                 }
-            }
                 if (isPhoneSelected) {
                     Box(
                         modifier = Modifier
@@ -138,7 +140,7 @@ fun LoginScreen(
                                         Spacer(Modifier.width(8.dp))
                                         Text(selectedCountry!!.name, style = MaterialTheme.typography.bodySmall)
                                     }
-                                }else{
+                                } else {
                                     Text(
                                         text = "Selected Country",
                                         style = MaterialTheme.typography.bodyMedium
@@ -162,7 +164,10 @@ fun LoginScreen(
                                 country.forEach { country ->
                                     DropdownMenuItem(
                                         text = {
-                                            Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.SpaceBetween) {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
                                                 Row {
                                                     Image(
                                                         painter = painterResource(country.flag),
@@ -208,7 +213,7 @@ fun LoginScreen(
                         },
                         maxLines = 1,
                     )
-                }else{
+                } else {
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
@@ -223,30 +228,31 @@ fun LoginScreen(
                     )
                 }
 
-            Button(
-                onClick = { /* Handle login */ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp)
-                    .height(50.dp)
-                    .clip(RoundedCornerShape(25)),
-                shape = RoundedCornerShape(25),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.scrim)
-            ) {
+                Button(
+                    onClick = { /* Handle login */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp)
+                        .height(50.dp)
+                        .clip(RoundedCornerShape(25)),
+                    shape = RoundedCornerShape(25),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.scrim)
+                ) {
+                    Text(
+                        text = "Log in",
+                        style = MaterialTheme.typography.titleLarge,
+                    )
+                }
                 Text(
-                    text = "Log in",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "Forgot password?",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .align(Alignment.CenterHorizontally),
+                    textAlign = TextAlign.Center
                 )
             }
-            Text(
-                text = "Forgot password?",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center
-            ) }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
