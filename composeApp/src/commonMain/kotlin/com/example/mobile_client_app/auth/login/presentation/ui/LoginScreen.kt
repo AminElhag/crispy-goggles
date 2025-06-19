@@ -8,6 +8,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,9 +18,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.login_main_image
 import mobile_client_app.composeapp.generated.resources.saudi_arabia
@@ -39,9 +42,11 @@ fun LoginScreen(
 ) {
     var isPhoneSelected by remember { mutableStateOf(true) }
     var isExpanded by remember { mutableStateOf(false) }
+    var isPasswordVisible by remember { mutableStateOf(false) }
     var selectedCountry by remember { mutableStateOf<Country?>(null) }
     var phone by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val country = mutableListOf<Country>(
         Country("SUDAN", "+249", Res.drawable.sudan),
         Country("SAUDI", "+966", Res.drawable.saudi_arabia),
@@ -227,6 +232,41 @@ fun LoginScreen(
                         maxLines = 1,
                     )
                 }
+
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    placeholder = { Text("Password") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .clip(RoundedCornerShape(25)),
+                    shape = RoundedCornerShape(25),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    maxLines = 1,
+                    suffix = {
+                        if (isPasswordVisible) {
+                            IconButton(
+                                onClick = { isPasswordVisible = !isPasswordVisible },
+                                modifier = Modifier.size(20.dp)
+                            ) {
+                                Icon(imageVector = Icons.Filled.Visibility, contentDescription = "Password")
+                            }
+                        } else {
+                            IconButton(
+                                onClick = { isPasswordVisible = !isPasswordVisible },
+                                modifier = Modifier.size(20.dp)
+                            ) {
+                                Icon(imageVector = Icons.Filled.VisibilityOff, contentDescription = "Password")
+                            }
+                        }
+                    },
+                    visualTransformation = if (isPasswordVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
+                )
 
                 Button(
                     onClick = { /* Handle login */ },
