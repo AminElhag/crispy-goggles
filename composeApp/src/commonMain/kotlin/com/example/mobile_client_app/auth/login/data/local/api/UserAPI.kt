@@ -1,27 +1,32 @@
 package com.example.mobile_client_app.auth.login.data.local.api
 
-import com.example.mobile_client_app.Constants
 import io.ktor.client.*
 import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 
 interface UserAPI {
     suspend fun login(
         emailOrPhone: String,
         password: String
-    ): HttpResponse
+    ): Boolean
 }
 
 class UserAPIImpl(private val httpClient: HttpClient) : UserAPI {
     override suspend fun login(
         emailOrPhone: String,
         password: String
-    ): HttpResponse {
-        val response = httpClient.post("${Constants.BASE_URL}auth/login") {
-            contentType(ContentType.Application.Json)
-            setBody(mapOf("username" to emailOrPhone, "password" to password))
+    ): Boolean {
+        return try {
+            val response = httpClient.post("http://192.168.105.48:8080/login") {
+                setBody(mapOf("username" to emailOrPhone, "password" to password))
+                contentType(ContentType.Application.Json)
+            }
+            response.status == HttpStatusCode.OK
+        } catch (e: Exception) {
+            println("Network error: ${e.message}")
+            false
         }
-        return response
     }
 }

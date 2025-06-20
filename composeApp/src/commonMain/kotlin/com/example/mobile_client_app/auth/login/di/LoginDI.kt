@@ -5,15 +5,13 @@ import com.example.mobile_client_app.auth.login.data.local.api.UserAPIImpl
 import com.example.mobile_client_app.auth.login.domain.repository.UserRepository
 import com.example.mobile_client_app.auth.login.domain.repository.UserRepositoryImpl
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
-import com.example.mobile_client_app.auth.login.presentation.ui.LoginScreenViewModel
-import io.ktor.client.HttpClient
+import com.example.mobile_client_app.auth.login.presentation.ui.LoginViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val loginModule = module {
-    viewModel { LoginScreenViewModel(get()) }
+    viewModel { LoginViewModel(get()) }
     single { LoginUseCase(get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<UserAPI> { UserAPIImpl(get()) }
-    single { HttpClient() }
 }

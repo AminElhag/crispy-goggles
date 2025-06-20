@@ -5,6 +5,10 @@ import com.example.mobile_client_app.di.initKoin
 
 fun MainViewController() = ComposeUIViewController(
     configure = {
-        initKoin()
+        initKoin(
+            config = {
+                modules(iosKoinModules)
+            }
+        )
     }
 ) { App() }

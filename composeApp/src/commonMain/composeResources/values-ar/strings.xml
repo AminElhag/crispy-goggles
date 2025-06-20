@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Jeem</string>
+    <string name="welcome_back">مرحبا بيك</string>
+    <string name="phone">هاتف</string>
+    <string name="email">البريد اللكتروني</string>
+    <string name="password">كلمة السر</string>
+    <string name="selected_country">اختار الدولة</string>
+    <string name="log_in">تسجيل دخول</string>
+    <string name="forgot_password">نسيت كلمة السر ؟</string>
+    <string name="not_a_member_yet">لست عضو؟</string>
+    <string name="join_now">انضم الان</string>
+    <string name="phone_empty_error">لا يمكن ان يكون رقم الهاتف خالي</string>
+
+    <string name="sudan">السودان</string>
+    <string name="saudi">السعودية</string>
+</resources>

@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Jeem</string>
     <string-array name="country_array">
-        <item>SAUDI</item>
-        <item>SUDAN</item>
+        <item>سعودية</item>
+        <item>سودان</item>
     </string-array>
     <string-array name="country_code_array">
         <item>+966</item>

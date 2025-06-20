@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Jeem</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="selected_country">Selected Country</string>
+    <string name="log_in">Log in</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="not_a_member_yet">Not a member yet?</string>
+    <string name="join_now">Join now</string>
+    <string name="phone_empty_error">Phone can't be empty</string>
+
+    <string name="sudan">SUDAN</string>
+    <string name="saudi">SAUDI</string>
+</resources>
