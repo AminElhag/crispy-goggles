@@ -94,6 +94,7 @@ fun LoginScreen(
                             Spacer(Modifier.width(8.dp))
                             Button(
                                 onClick = {
+                                    viewModel.updatePassword("")
                                     viewModel.isPhoneSelected(false)
                                 },
                                 shape = RoundedCornerShape(30),
@@ -184,6 +185,7 @@ fun LoginScreen(
                                             },
                                             onClick = {
                                                 selectedCountry = country
+                                                viewModel.updateCountry(country)
                                                 isExpanded = false
                                             }
                                         )
@@ -192,6 +194,7 @@ fun LoginScreen(
                             }
                         }
                         OutlinedTextField(
+                            enabled = selectedCountry != null,
                             value = viewModel.phone,
                             placeholder = { Text(stringResource(Res.string.phone)) },
                             modifier = Modifier
@@ -223,7 +226,7 @@ fun LoginScreen(
                             placeholder = { Text(stringResource(Res.string.email)) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
                                 .clip(RoundedCornerShape(25)),
                             shape = RoundedCornerShape(25),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -232,6 +235,7 @@ fun LoginScreen(
                     }
 
                     OutlinedTextField(
+                        enabled = viewModel.isPasswordEnabled(),
                         value = viewModel.password,
                         onValueChange = { viewModel.updatePassword(it) },
                         placeholder = { Text(stringResource(Res.string.password)) },

@@ -7,15 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
-import io.ktor.http.*
-import io.ktor.http.cio.*
+import com.example.mobile_client_app.common.CountryPicker.Country
 import kotlinx.coroutines.launch
-
-data class MyUiState(
-    val data: Response? = null,
-    val isLoading: Boolean = true,
-    val error: String? = null
-)
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase
@@ -33,6 +26,8 @@ class LoginViewModel(
         private set
     var isPhoneSelected by mutableStateOf(true)
         private set
+    var country by mutableStateOf<Country?>(null)
+        private set
 
     fun login() {
         setEmailOrPhone()
@@ -42,7 +37,7 @@ class LoginViewModel(
         }
         isLoading = true
         viewModelScope.launch {
-            val response = loginUseCase("emailOrPhone", "password")
+            val response = loginUseCase(emailOrPhone, password)
             if (!response) {
                 errorMessage = "Login failed"
             }
@@ -51,10 +46,10 @@ class LoginViewModel(
     }
 
     private fun setEmailOrPhone() {
-        if (isPhoneSelected) {
-            emailOrPhone = phone
-        }else{
-            emailOrPhone = email
+        emailOrPhone = if (isPhoneSelected) {
+            country!!.code+phone
+        } else {
+            email
         }
     }
 
@@ -72,11 +67,7 @@ class LoginViewModel(
     }
 
     val phoneHasErrors by derivedStateOf {
-        if (phone.isNotEmpty()) {
-            true
-        } else {
-            false
-        }
+        phone.isNotEmpty()
     }
 
     fun updatePassword(input: String) {
@@ -85,5 +76,13 @@ class LoginViewModel(
 
     fun isPhoneSelected(bool: Boolean) {
         isPhoneSelected = bool
+    }
+
+    fun updateCountry(country: Country) {
+        this.country = country
+    }
+
+    fun isPasswordEnabled() : Boolean {
+        return phone.isNotEmpty() || email.isNotEmpty()
     }
 }
