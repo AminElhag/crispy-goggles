@@ -8,15 +8,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
 import com.example.mobile_client_app.common.CountryPicker.Country
+import com.example.mobile_client_app.util.NetworkError
+import com.example.mobile_client_app.util.onError
+import com.example.mobile_client_app.util.onSuccess
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+
+sealed interface LoginEvent {
+    data class ShowSnackbar(val message: String) : LoginEvent
+}
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
     var emailOrPhone by mutableStateOf("")
     var isLoading by mutableStateOf(false)
-    var errorMessage by mutableStateOf("")
+    var errorMessage by mutableStateOf<NetworkError?>(null)
+    var successMessage by mutableStateOf("")
+
     val numericRegex = Regex("[^0-9]")
+
 
     var phone by mutableStateOf("")
         private set
@@ -29,25 +41,43 @@ class LoginViewModel(
     var country by mutableStateOf<Country?>(null)
         private set
 
+    var snackbarMessage by mutableStateOf("")
+    var showSnackbar by mutableStateOf(false)
+        private set
+
+    private val _events = MutableStateFlow<LoginEvent?>(null)
+    val events: StateFlow<LoginEvent?> = _events
+
     fun login() {
-        setEmailOrPhone()
         if (emailOrPhone.isEmpty() || password.isEmpty()) {
-            errorMessage = "Please enter email or phone and password"
+            viewModelScope.launch {
+                _events.value = LoginEvent.ShowSnackbar("Please enter a valid email address")
+            }
             return
         }
-        isLoading = true
+        setEmailOrPhone()
+        if (emailOrPhone.isEmpty() || password.isEmpty()) {
+            errorMessage = NetworkError.NO_INTERNET
+            showSnackbar("Login failed")
+            return
+        }
         viewModelScope.launch {
-            val response = loginUseCase(emailOrPhone, password)
-            if (!response) {
-                errorMessage = "Login failed"
-            }
-            isLoading = false
+            isLoading = true
+            loginUseCase(emailOrPhone, password)
+                .onError {
+                    isLoading = false
+                    errorMessage = it
+                    showSnackbar("Please enter email or phone and password")
+                }.onSuccess {
+                    isLoading = false
+                    successMessage = it.token
+                }
         }
     }
 
     private fun setEmailOrPhone() {
         emailOrPhone = if (isPhoneSelected) {
-            country!!.code+phone
+            country!!.code + phone
         } else {
             email
         }
@@ -82,7 +112,16 @@ class LoginViewModel(
         this.country = country
     }
 
-    fun isPasswordEnabled() : Boolean {
+    fun isPasswordEnabled(): Boolean {
         return phone.isNotEmpty() || email.isNotEmpty()
+    }
+
+    private fun showSnackbar(message: String) {
+        snackbarMessage = message
+        showSnackbar = true
+    }
+
+    fun updateShowSnackbar(state: Boolean) {
+        showSnackbar = state
     }
 }

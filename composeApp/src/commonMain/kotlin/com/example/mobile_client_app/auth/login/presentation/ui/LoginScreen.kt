@@ -38,7 +38,28 @@ fun LoginScreen(
     var isPasswordVisible by remember { mutableStateOf(false) }
     var selectedCountry by remember { mutableStateOf<Country?>(null) }
 
-    Scaffold {
+    val showSnackbar by remember { mutableStateOf(viewModel.showSnackbar) }
+    val snackbarMessage by remember { mutableStateOf(viewModel.snackbarMessage) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val event = viewModel.events.collectAsState().value
+
+    LaunchedEffect(event) {
+        if (event != null) {
+            when (event) {
+                is LoginEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) {
         Box {
             Column(
                 modifier = Modifier.fillMaxSize()
