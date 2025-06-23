@@ -37,9 +37,6 @@ fun LoginScreen(
     var isExpanded by remember { mutableStateOf(false) }
     var isPasswordVisible by remember { mutableStateOf(false) }
     var selectedCountry by remember { mutableStateOf<Country?>(null) }
-
-    val showSnackbar by remember { mutableStateOf(viewModel.showSnackbar) }
-    val snackbarMessage by remember { mutableStateOf(viewModel.snackbarMessage) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     val event = viewModel.events.collectAsState().value

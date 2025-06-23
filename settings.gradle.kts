@@ -25,6 +25,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        maven("https://s3.amazonaws.com/mirego-maven/public")
     }
 }
 

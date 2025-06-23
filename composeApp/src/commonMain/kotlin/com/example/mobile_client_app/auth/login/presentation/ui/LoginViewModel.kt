@@ -8,11 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
 import com.example.mobile_client_app.common.CountryPicker.Country
+import com.example.mobile_client_app.common.NetworkManager
 import com.example.mobile_client_app.util.NetworkError
 import com.example.mobile_client_app.util.onError
 import com.example.mobile_client_app.util.onSuccess
+import com.mirego.konnectivity.NetworkState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 sealed interface LoginEvent {
@@ -48,7 +51,18 @@ class LoginViewModel(
     private val _events = MutableStateFlow<LoginEvent?>(null)
     val events: StateFlow<LoginEvent?> = _events
 
+    private var isConnected = false
+
     fun login() {
+        print("LOGIN FUN")
+        if (!checkInternetConnection()){
+            print("outInside the viewmodel scope")
+            viewModelScope.launch {
+                print("Inside the viewmodel scope")
+                _events.value = LoginEvent.ShowSnackbar("Internet is not connected")
+            }
+            return
+        }
         if (emailOrPhone.isEmpty() || password.isEmpty()) {
             viewModelScope.launch {
                 _events.value = LoginEvent.ShowSnackbar("Please enter a valid email address")
@@ -121,7 +135,17 @@ class LoginViewModel(
         showSnackbar = true
     }
 
-    fun updateShowSnackbar(state: Boolean) {
-        showSnackbar = state
+    fun checkInternetConnection(): Boolean {
+        print("Check internet connection")
+        viewModelScope.launch {
+            NetworkManager.networkState.collectLatest { networkState ->
+                isConnected = when (networkState) {
+                    is NetworkState.Reachable -> true
+                    NetworkState.Unreachable -> false
+                }
+            }
+        }
+        print("Internet connection : $isConnected")
+        return isConnected
     }
 }

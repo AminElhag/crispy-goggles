@@ -12,6 +12,7 @@ androidx-lifecycle = "2.9.0"
 androidx-testExt = "1.2.1"
 composeMultiplatform = "1.8.1"
 junit = "4.13.2"
+konnectivity = "0.3.0"
 kotlin = "2.1.21"
 navigationCompose = "2.9.0-beta01"
 ktor = "3.1.3"
@@ -20,6 +21,7 @@ koin = "4.0.4"
 koin-compose = "4.0.4"
 
 [libraries]
+konnectivity = { module = "com.mirego:konnectivity", version.ref = "konnectivity" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit" }
