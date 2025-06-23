@@ -8,12 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
 import com.example.mobile_client_app.common.CountryPicker.Country
-import com.example.mobile_client_app.common.checkInternetConnection
+import com.example.mobile_client_app.common.NetworkManager
+import com.example.mobile_client_app.di.networkModule
 import com.example.mobile_client_app.util.NetworkError
+import com.example.mobile_client_app.util.networkError
 import com.example.mobile_client_app.util.onError
 import com.example.mobile_client_app.util.onSuccess
+import com.mirego.konnectivity.NetworkState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import saschpe.log4k.Log
 
@@ -27,13 +31,11 @@ class LoginViewModel(
 ) : ViewModel() {
     var emailOrPhone by mutableStateOf("")
     var isLoading by mutableStateOf(false)
-    var errorMessage by mutableStateOf<NetworkError?>(null)
-    var successMessage by mutableStateOf("")
 
     val numericRegex = Regex("[^0-9]")
 
 
-    var phone by mutableStateOf("")
+    var phoneNumber by mutableStateOf("")
         private set
     var email by mutableStateOf("")
         private set
@@ -47,23 +49,29 @@ class LoginViewModel(
     private val _events = MutableStateFlow<LoginEvent?>(null)
     val events: StateFlow<LoginEvent?> = _events
 
+    var isConnected = false
+
     fun login() {
         viewModelScope.launch {
-            Log.debug("Debugging: inside the login function")
-            if (!checkInternetConnection(this.coroutineContext)) {
+            checkInternetConnection()
+            if (!isConnected) {
                 _events.value = LoginEvent.ShowSnackbar("Internet is not connected")
-            } else if (emailOrPhone.isEmpty() || password.isEmpty()) {
-                _events.value = LoginEvent.ShowSnackbar("Please enter a valid email address")
+            } else if (isPhoneSelected && phoneNumber.isBlank()) {
+                _events.value = LoginEvent.ShowSnackbar("Phone number should be specified")
+            } else if (!isPhoneSelected && email.isBlank()) {
+                _events.value = LoginEvent.ShowSnackbar("Email should be specified")
+            } else if (password.isBlank()) {
+                _events.value = LoginEvent.ShowSnackbar("Password should be specified")
             } else {
                 setEmailOrPhone()
                 isLoading = true
                 loginUseCase(emailOrPhone, password)
                     .onError {
                         isLoading = false
-                        errorMessage = it
+                        _events.value = LoginEvent.ShowSnackbar(message = networkError(it))
                     }.onSuccess {
                         isLoading = false
-                        successMessage = it.token
+                        _events.value = LoginEvent.ShowSnackbar(message = "Successfully logged in")
                     }
             }
         }
@@ -71,7 +79,7 @@ class LoginViewModel(
 
     private fun setEmailOrPhone() {
         emailOrPhone = if (isPhoneSelected) {
-            country!!.code + phone
+            country!!.code + phoneNumber
         } else {
             email
         }
@@ -83,7 +91,7 @@ class LoginViewModel(
 
     fun updatePhone(input: String) {
         val stripped = numericRegex.replace(input, "")
-        phone = if (stripped.length >= 10) {
+        phoneNumber = if (stripped.length >= 10) {
             stripped.substring(0..9)
         } else {
             stripped
@@ -91,7 +99,7 @@ class LoginViewModel(
     }
 
     val phoneHasErrors by derivedStateOf {
-        phone.isNotEmpty()
+        phoneNumber.isNotEmpty()
     }
 
     fun updatePassword(input: String) {
@@ -107,10 +115,23 @@ class LoginViewModel(
     }
 
     fun isPasswordEnabled(): Boolean {
-        return phone.isNotEmpty() || email.isNotEmpty()
+        return phoneNumber.isNotEmpty() || email.isNotEmpty()
     }
 
     fun resetEvent(){
         _events.value = LoginEvent.Reset
+    }
+
+    fun checkInternetConnection() {
+        viewModelScope.launch {
+            NetworkManager.networkState.collectLatest { networkState ->
+                Log.debug { "Internet is connection : ${networkState}" }
+                isConnected = when (networkState) {
+                    is NetworkState.Reachable -> true
+                    NetworkState.Unreachable -> false
+                }
+            }
+        }
+        Log.debug { "Internet is connection : $isConnected" }
     }
 }

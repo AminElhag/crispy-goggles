@@ -2,6 +2,7 @@ package com.example.mobile_client_app.auth.login.presentation.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -28,7 +29,6 @@ import mobile_client_app.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-
 
 @Composable
 fun LoginScreen(
@@ -218,7 +218,7 @@ fun LoginScreen(
                         }
                         OutlinedTextField(
                             enabled = selectedCountry != null,
-                            value = viewModel.phone,
+                            value = viewModel.phoneNumber,
                             placeholder = { Text(stringResource(Res.string.phone)) },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -320,8 +320,11 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .align(Alignment.CenterHorizontally),
-                        textAlign = TextAlign.Center
+                            .align(Alignment.CenterHorizontally)
+                            .clickable {
+
+                            },
+                        textAlign = TextAlign.Center,
                     )
                 }
                 Row(
@@ -362,7 +365,7 @@ fun LoginScreen(
                     ) {
                         Text(
                             text = stringResource(Res.string.join_now),
-                            style = MaterialTheme.typography.titleSmall
+                            style = MaterialTheme.typography.bodySmall
                         )
                     }
                 }
