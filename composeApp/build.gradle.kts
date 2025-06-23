@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             api(libs.konnectivity)
+            implementation(libs.log4k)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

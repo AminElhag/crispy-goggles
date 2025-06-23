@@ -8,17 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
 import com.example.mobile_client_app.common.CountryPicker.Country
-import com.example.mobile_client_app.common.NetworkManager
+import com.example.mobile_client_app.common.checkInternetConnection
 import com.example.mobile_client_app.util.NetworkError
 import com.example.mobile_client_app.util.onError
 import com.example.mobile_client_app.util.onSuccess
-import com.mirego.konnectivity.NetworkState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import saschpe.log4k.Log
 
 sealed interface LoginEvent {
+    object Reset : LoginEvent
     data class ShowSnackbar(val message: String) : LoginEvent
 }
 
@@ -44,48 +44,28 @@ class LoginViewModel(
     var country by mutableStateOf<Country?>(null)
         private set
 
-    var snackbarMessage by mutableStateOf("")
-    var showSnackbar by mutableStateOf(false)
-        private set
-
     private val _events = MutableStateFlow<LoginEvent?>(null)
     val events: StateFlow<LoginEvent?> = _events
 
-    private var isConnected = false
-
     fun login() {
-        print("LOGIN FUN")
-        if (!checkInternetConnection()){
-            print("outInside the viewmodel scope")
-            viewModelScope.launch {
-                print("Inside the viewmodel scope")
-                _events.value = LoginEvent.ShowSnackbar("Internet is not connected")
-            }
-            return
-        }
-        if (emailOrPhone.isEmpty() || password.isEmpty()) {
-            viewModelScope.launch {
-                _events.value = LoginEvent.ShowSnackbar("Please enter a valid email address")
-            }
-            return
-        }
-        setEmailOrPhone()
-        if (emailOrPhone.isEmpty() || password.isEmpty()) {
-            errorMessage = NetworkError.NO_INTERNET
-            showSnackbar("Login failed")
-            return
-        }
         viewModelScope.launch {
-            isLoading = true
-            loginUseCase(emailOrPhone, password)
-                .onError {
-                    isLoading = false
-                    errorMessage = it
-                    showSnackbar("Please enter email or phone and password")
-                }.onSuccess {
-                    isLoading = false
-                    successMessage = it.token
-                }
+            Log.debug("Debugging: inside the login function")
+            if (!checkInternetConnection(this.coroutineContext)) {
+                _events.value = LoginEvent.ShowSnackbar("Internet is not connected")
+            } else if (emailOrPhone.isEmpty() || password.isEmpty()) {
+                _events.value = LoginEvent.ShowSnackbar("Please enter a valid email address")
+            } else {
+                setEmailOrPhone()
+                isLoading = true
+                loginUseCase(emailOrPhone, password)
+                    .onError {
+                        isLoading = false
+                        errorMessage = it
+                    }.onSuccess {
+                        isLoading = false
+                        successMessage = it.token
+                    }
+            }
         }
     }
 
@@ -130,22 +110,7 @@ class LoginViewModel(
         return phone.isNotEmpty() || email.isNotEmpty()
     }
 
-    private fun showSnackbar(message: String) {
-        snackbarMessage = message
-        showSnackbar = true
-    }
-
-    fun checkInternetConnection(): Boolean {
-        print("Check internet connection")
-        viewModelScope.launch {
-            NetworkManager.networkState.collectLatest { networkState ->
-                isConnected = when (networkState) {
-                    is NetworkState.Reachable -> true
-                    NetworkState.Unreachable -> false
-                }
-            }
-        }
-        print("Internet connection : $isConnected")
-        return isConnected
+    fun resetEvent(){
+        _events.value = LoginEvent.Reset
     }
 }

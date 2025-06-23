@@ -49,6 +49,11 @@ fun LoginScreen(
                         message = event.message,
                         duration = SnackbarDuration.Short
                     )
+                    viewModel.resetEvent()
+                }
+
+                LoginEvent.Reset -> {
+
                 }
             }
         }
