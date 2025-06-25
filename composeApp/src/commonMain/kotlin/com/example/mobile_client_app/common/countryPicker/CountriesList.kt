@@ -1,10 +1,9 @@
-package com.example.mobile_client_app.common.CountryPicker
+package com.example.mobile_client_app.common.countryPicker
 
 import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.saudi
 import mobile_client_app.composeapp.generated.resources.saudi_arabia
 import mobile_client_app.composeapp.generated.resources.sudan
-import org.jetbrains.compose.resources.getString
 
 val country = mutableListOf(
     Country(Res.string.sudan, "+249", Res.drawable.sudan),

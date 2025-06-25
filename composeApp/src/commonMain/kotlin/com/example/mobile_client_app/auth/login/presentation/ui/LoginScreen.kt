@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -23,8 +24,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.mobile_client_app.common.CountryPicker.Country
-import com.example.mobile_client_app.common.CountryPicker.country
+import com.example.mobile_client_app.common.component.RoundedCornerButton
+import com.example.mobile_client_app.common.component.RoundedCornerPasswordTextField
+import com.example.mobile_client_app.common.countryPicker.Country
+import com.example.mobile_client_app.common.countryPicker.country
 import mobile_client_app.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -32,7 +35,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = koinViewModel()
+    viewModel: LoginViewModel = koinViewModel(),
+    onNavigateToRegisteringScreen: () -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -240,7 +244,12 @@ fun LoginScreen(
                             },
                             maxLines = 1,
                             onValueChange = { viewModel.updatePhone(it) },
-                            isError = viewModel.phoneHasErrors,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color.Transparent,
+                                unfocusedBorderColor = Color.Transparent,
+                                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                            ),
                         )
                     } else {
                         OutlinedTextField(
@@ -256,64 +265,29 @@ fun LoginScreen(
                             maxLines = 1,
                         )
                     }
-
-                    OutlinedTextField(
+                    RoundedCornerPasswordTextField(
                         enabled = viewModel.isPasswordEnabled(),
                         value = viewModel.password,
                         onValueChange = { viewModel.updatePassword(it) },
-                        placeholder = { Text(stringResource(Res.string.password)) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                             .clip(RoundedCornerShape(25)),
-                        shape = RoundedCornerShape(25),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        maxLines = 1,
-                        suffix = {
-                            if (isPasswordVisible) {
-                                IconButton(
-                                    onClick = { isPasswordVisible = !isPasswordVisible },
-                                    modifier = Modifier.size(20.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Visibility,
-                                        contentDescription = stringResource(Res.string.password)
-                                    )
-                                }
-                            } else {
-                                IconButton(
-                                    onClick = { isPasswordVisible = !isPasswordVisible },
-                                    modifier = Modifier.size(20.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.VisibilityOff,
-                                        contentDescription = stringResource(Res.string.password)
-                                    )
-                                }
-                            }
-                        },
-                        visualTransformation = if (isPasswordVisible) {
-                            VisualTransformation.None
-                        } else {
-                            PasswordVisualTransformation()
-                        },
+                        placeholder = stringResource(Res.string.password),
+                        isPasswordVisible = isPasswordVisible,
+                        onChangeVisibility = {
+                            isPasswordVisible = !isPasswordVisible
+                        }
                     )
-
-                    Button(
+                    RoundedCornerButton(
                         onClick = { viewModel.login() },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 16.dp)
                             .height(50.dp)
                             .clip(RoundedCornerShape(25)),
-                        shape = RoundedCornerShape(25),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.scrim)
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.log_in),
-                            style = MaterialTheme.typography.titleLarge,
-                        )
-                    }
+                        text = stringResource(Res.string.log_in)
+                    )
                     Text(
                         text = stringResource(Res.string.forgot_password),
                         style = MaterialTheme.typography.bodyMedium,
@@ -352,7 +326,7 @@ fun LoginScreen(
                         )
                     }
                     Button(
-                        onClick = { /* Handle join now */ },
+                        onClick = onNavigateToRegisteringScreen,
                         modifier = Modifier
                             .weight(1f)
                             .padding(horizontal = 8.dp)

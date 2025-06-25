@@ -10,6 +10,15 @@
     <string name="not_a_member_yet">Not a member yet?</string>
     <string name="join_now">Join now</string>
     <string name="phone_empty_error">Phone can't be empty</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="middle_name">Middle Name</string>
+    <string name="id_number">ID Number</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="weak">Weak</string>
+    <string name="medium">Medium</string>
+    <string name="strong">Strong</string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>

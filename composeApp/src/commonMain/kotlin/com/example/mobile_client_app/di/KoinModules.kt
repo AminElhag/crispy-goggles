@@ -2,6 +2,7 @@ package com.example.mobile_client_app.di
 
 import androidx.compose.ui.autofill.ContentType
 import com.example.mobile_client_app.auth.login.di.loginModule
+import com.example.mobile_client_app.auth.registering.di.registeringModule
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -16,6 +17,6 @@ fun initKoin(config: KoinAppDeclaration? = null) =
     startKoin {
         config?.invoke(this)
         modules(
-            networkModule,loginModule
+            networkModule,loginModule,registeringModule
         )
     }

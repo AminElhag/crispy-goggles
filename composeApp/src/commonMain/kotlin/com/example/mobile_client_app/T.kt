@@ -34,6 +34,7 @@ fun DetailScreen(onNavigateBack: () -> Unit) {
     }
 }
 
+/*
 @Composable
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(
@@ -47,4 +48,4 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             DetailScreen(onNavigateBack = { navController.popBackStack() })
         }
     }
-}
+}*/

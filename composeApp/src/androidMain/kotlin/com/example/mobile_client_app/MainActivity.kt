@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mobile_client_app.auth.login.di.loginModule
+import com.example.mobile_client_app.auth.registering.di.registeringModule
 import com.example.mobile_client_app.di.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -23,7 +24,8 @@ class MainActivity : ComponentActivity() {
                 listOf(
                     loginModule,
                     androidKoinModules,
-                    networkModule
+                    networkModule,
+                    registeringModule
                 )
             )
         }

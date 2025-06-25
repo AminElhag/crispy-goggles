@@ -1,4 +1,4 @@
-package com.example.mobile_client_app.common.CountryPicker
+package com.example.mobile_client_app.common.countryPicker
 
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource

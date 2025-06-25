@@ -11,6 +11,15 @@
     <string name="not_a_member_yet">لست عضو؟</string>
     <string name="join_now">انضم الان</string>
     <string name="phone_empty_error">لا يمكن ان يكون رقم الهاتف خالي</string>
+    <string name="first_name">اسمك</string>
+    <string name="last_name">الاسم الاخير</string>
+    <string name="middle_name">اسم الاب</string>
+    <string name="id_number">رقم الهوية</string>
+    <string name="male">ذكر</string>
+    <string name="female">انثى</string>
+    <string name="weak">ضعيفة</string>
+    <string name="medium">متوسطه</string>
+    <string name="strong">قوية</string>
 
     <string name="sudan">السودان</string>
     <string name="saudi">السعودية</string>

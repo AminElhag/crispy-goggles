@@ -61,6 +61,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             api(libs.konnectivity)
             implementation(libs.log4k)
+            implementation(libs.kotlinx.datetime)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

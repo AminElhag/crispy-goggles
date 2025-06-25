@@ -7,10 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
-import com.example.mobile_client_app.common.CountryPicker.Country
+import com.example.mobile_client_app.common.countryPicker.Country
 import com.example.mobile_client_app.common.NetworkManager
-import com.example.mobile_client_app.di.networkModule
-import com.example.mobile_client_app.util.NetworkError
 import com.example.mobile_client_app.util.networkError
 import com.example.mobile_client_app.util.onError
 import com.example.mobile_client_app.util.onSuccess
