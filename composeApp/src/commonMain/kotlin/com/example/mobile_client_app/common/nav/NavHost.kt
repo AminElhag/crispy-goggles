@@ -24,6 +24,9 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             RegisteringScreen(
                 onNavigateToBackPage = {
                     navController.popBackStack()
+                },
+                onNavigateToAdditionInformation = {
+
                 }
             )
         }

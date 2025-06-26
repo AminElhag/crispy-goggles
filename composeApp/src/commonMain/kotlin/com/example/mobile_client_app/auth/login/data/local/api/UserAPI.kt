@@ -1,8 +1,8 @@
 package com.example.mobile_client_app.auth.login.data.local.api
 
 import com.example.mobile_client_app.auth.login.domain.model.LoginResponse
-import com.example.mobile_client_app.util.NetworkError
-import com.example.mobile_client_app.util.Result
+import com.example.mobile_client_app.util.network.NetworkError
+import com.example.mobile_client_app.util.network.Result
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*

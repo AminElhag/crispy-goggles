@@ -7,11 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
-import com.example.mobile_client_app.common.countryPicker.Country
 import com.example.mobile_client_app.common.NetworkManager
-import com.example.mobile_client_app.util.networkError
-import com.example.mobile_client_app.util.onError
-import com.example.mobile_client_app.util.onSuccess
+import com.example.mobile_client_app.common.countryPicker.Country
+import com.example.mobile_client_app.util.network.networkError
+import com.example.mobile_client_app.util.network.onError
+import com.example.mobile_client_app.util.network.onSuccess
+import com.example.mobile_client_app.util.phoneNumberVerification
 import com.mirego.konnectivity.NetworkState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,10 +30,6 @@ class LoginViewModel(
 ) : ViewModel() {
     var emailOrPhone by mutableStateOf("")
     var isLoading by mutableStateOf(false)
-
-    val numericRegex = Regex("[^0-9]")
-
-
     var phoneNumber by mutableStateOf("")
         private set
     var email by mutableStateOf("")
@@ -88,12 +85,7 @@ class LoginViewModel(
     }
 
     fun updatePhone(input: String) {
-        val stripped = numericRegex.replace(input, "")
-        phoneNumber = if (stripped.length >= 10) {
-            stripped.substring(0..9)
-        } else {
-            stripped
-        }
+        phoneNumber = phoneNumberVerification(input)
     }
 
     val phoneHasErrors by derivedStateOf {
@@ -116,7 +108,7 @@ class LoginViewModel(
         return phoneNumber.isNotEmpty() || email.isNotEmpty()
     }
 
-    fun resetEvent(){
+    fun resetEvent() {
         _events.value = LoginEvent.Reset
     }
 

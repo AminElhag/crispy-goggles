@@ -33,7 +33,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun RegisteringScreen(
     viewModel: RegisteringViewModel = koinViewModel(),
-    onNavigateToBackPage: () -> Unit
+    onNavigateToBackPage: () -> Unit,
+    onNavigateToAdditionInformation: () -> Unit,
 ) {
     val datePickerState = rememberDatePickerState()
 
@@ -56,13 +57,16 @@ fun RegisteringScreen(
         },
         bottomBar = {
             RoundedCornerButton(
-                onClick = { },
+                onClick = {
+                    if(viewModel.savePersonalInformation())
+                        onNavigateToAdditionInformation()
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 16.dp)
                     .height(50.dp)
                     .clip(RoundedCornerShape(50)),
-                text = stringResource(Res.string.log_in)
+                text = stringResource(Res.string.next)
             )
         }
     ) { paddingValues ->
@@ -200,7 +204,7 @@ fun RegisteringScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         Card(
                             shape = RoundedCornerShape(25),
