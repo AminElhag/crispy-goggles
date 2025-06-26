@@ -14,6 +14,9 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,6 +40,27 @@ fun RegisteringScreen(
     onNavigateToAdditionInformation: () -> Unit,
 ) {
     val datePickerState = rememberDatePickerState()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val event = viewModel.events.collectAsState().value
+
+    LaunchedEffect(event) {
+        if (event != null) {
+            when (event) {
+                is RegisteringEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = SnackbarDuration.Short
+                    )
+                    viewModel.resetEvent()
+                }
+
+                RegisteringEvent.Reset -> {
+
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -58,7 +82,7 @@ fun RegisteringScreen(
         bottomBar = {
             RoundedCornerButton(
                 onClick = {
-                    if(viewModel.savePersonalInformation())
+                    if (viewModel.savePersonalInformation())
                         onNavigateToAdditionInformation()
                 },
                 modifier = Modifier
@@ -68,7 +92,8 @@ fun RegisteringScreen(
                     .clip(RoundedCornerShape(50)),
                 text = stringResource(Res.string.next)
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         Box {
             Column(

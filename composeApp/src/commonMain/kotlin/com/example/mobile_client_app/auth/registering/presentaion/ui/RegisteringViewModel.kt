@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.mobile_client_app.auth.login.presentation.ui.LoginEvent
 import com.example.mobile_client_app.common.component.millisToDate
 import com.example.mobile_client_app.common.component.toDDMMYYY
 import com.example.mobile_client_app.common.countryPicker.Country
@@ -142,26 +141,30 @@ class RegisteringViewModel() : ViewModel() {
         return if (firstName.isBlank() || firstName.length < 3) {
             _events.value = RegisteringEvent.ShowSnackbar("First name is required")
             false
-        }else if (lastName.isBlank() || lastName.length < 3) {
+        } else if (lastName.isBlank() || lastName.length < 3) {
             _events.value = RegisteringEvent.ShowSnackbar("Last name is required")
             false
-        }else if (dateOfBirth ==null) {
+        } else if (dateOfBirth == null) {
             _events.value = RegisteringEvent.ShowSnackbar("Date Of Birth is required")
             false
-        }else if (phoneNumber.isBlank()) {
+        } else if (phoneNumber.isBlank()) {
             _events.value = RegisteringEvent.ShowSnackbar("Phone number is required")
             false
-        }else if (email.isBlank()) {
+        } else if (email.isBlank()) {
             _events.value = RegisteringEvent.ShowSnackbar("Email is required")
             false
-        }else if (password.isBlank()) {
+        } else if (password.isBlank()) {
             _events.value = RegisteringEvent.ShowSnackbar("Password is required")
             false
-        }else if (passwordStrength < 0.66f){
+        } else if (passwordStrength < 0.66f) {
             _events.value = RegisteringEvent.ShowSnackbar("Password is weak")
             false
-        }else {
+        } else {
             true
         }
+    }
+
+    fun resetEvent() {
+        _events.value = RegisteringEvent.Reset
     }
 }
