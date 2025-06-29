@@ -10,14 +10,14 @@ import io.ktor.http.*
 import io.ktor.util.network.*
 import kotlinx.serialization.SerializationException
 
-interface UserAPI {
+interface LoginAPI {
     suspend fun login(
         emailOrPhone: String,
         password: String
     ): Result<LoginResponse, NetworkError>
 }
 
-class UserAPIImpl(private val httpClient: HttpClient) : UserAPI {
+class LoginAPIImpl(private val httpClient: HttpClient) : LoginAPI {
     override suspend fun login(
         emailOrPhone: String,
         password: String

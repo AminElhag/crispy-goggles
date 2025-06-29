@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mobile_client_app.DetailScreen
 import com.example.mobile_client_app.auth.login.presentation.ui.LoginScreen
+import com.example.mobile_client_app.auth.registering.presentaion.ui.AdditionInformationScreen
 import com.example.mobile_client_app.auth.registering.presentaion.ui.RegisteringScreen
 
 @Composable
@@ -26,13 +27,16 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                     navController.popBackStack()
                 },
                 onNavigateToAdditionInformation = {
-
+                    navController.navigate(AppScreen.AdditionInformation.route)
                 }
             )
         }
-
-        /*composable(AppScreen.Login.route) {
-            DetailScreen(onNavigateBack = { navController.popBackStack() })
-        }*/
+        composable(AppScreen.AdditionInformation.route) {
+            AdditionInformationScreen(
+                onNavigateToBackPage = {
+                    navController.popBackStack()
+                }
+            )
+        }
     }
 }

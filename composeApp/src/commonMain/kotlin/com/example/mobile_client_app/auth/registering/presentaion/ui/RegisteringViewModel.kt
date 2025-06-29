@@ -1,25 +1,43 @@
 package com.example.mobile_client_app.auth.registering.presentaion.ui
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mobile_client_app.auth.registering.domain.model.UserDTO
+import com.example.mobile_client_app.auth.registering.domain.usecase.CreateUserUseCase
+import com.example.mobile_client_app.common.HearAboutUs
+import com.example.mobile_client_app.common.MedicalCondition
+import com.example.mobile_client_app.common.NetworkManager
 import com.example.mobile_client_app.common.component.millisToDate
 import com.example.mobile_client_app.common.component.toDDMMYYY
 import com.example.mobile_client_app.common.countryPicker.Country
+import com.example.mobile_client_app.util.network.onError
+import com.example.mobile_client_app.util.network.onSuccess
 import com.example.mobile_client_app.util.phoneNumberVerification
 import com.example.mobile_client_app.util.validName
 import com.example.mobile_client_app.util.validNumber
+import com.mirego.konnectivity.NetworkState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
+import mobile_client_app.composeapp.generated.resources.Res
+import mobile_client_app.composeapp.generated.resources.select_any_medical_conditions
+import org.jetbrains.compose.resources.getString
+import saschpe.log4k.Log
 
 sealed interface RegisteringEvent {
     object Reset : RegisteringEvent
     data class ShowSnackbar(val message: String) : RegisteringEvent
 }
 
-class RegisteringViewModel() : ViewModel() {
+class RegisteringViewModel(
+    private val createUserUseCase: CreateUserUseCase
+) : ViewModel() {
     var firstName by mutableStateOf("")
         private set
     var middleName by mutableStateOf("")
@@ -28,7 +46,7 @@ class RegisteringViewModel() : ViewModel() {
         private set
     var idNumber by mutableStateOf("")
         private set
-    var dateOfBirth by mutableStateOf<LocalDateTime?>(null)
+    var dataOfBirth by mutableStateOf<LocalDateTime?>(null)
         private set
     var showDatePicker by mutableStateOf(false)
         private set
@@ -42,15 +60,31 @@ class RegisteringViewModel() : ViewModel() {
         private set
     var selectedCountry by mutableStateOf<Country?>(null)
         private set
-    var isExpanded by mutableStateOf(false)
+    var isCountrySelectorExpanded by mutableStateOf(false)
+        private set
+    var isHearAboutUsSelectorExpanded by mutableStateOf(false)
         private set
     var phoneNumber by mutableStateOf("")
         private set
     var email by mutableStateOf("")
         private set
+    var emergencyContact by mutableStateOf("")
+        private set
+    var hearAboutUs by mutableStateOf<HearAboutUs?>(null)
+        private set
+    var occupation by mutableStateOf("")
+        private set
+    var medicalConditions = mutableStateListOf<MedicalCondition>()
+        private set
+    var isMedicalConditionExpanded by mutableStateOf(false)
+        private set
 
     private val _events = MutableStateFlow<RegisteringEvent?>(null)
     val events: StateFlow<RegisteringEvent?> = _events
+
+    var isLoading by mutableStateOf(false)
+
+    var isConnected = false
 
     fun updateFirstName(newName: String) {
         firstName = validName(newName) ?: return
@@ -73,11 +107,11 @@ class RegisteringViewModel() : ViewModel() {
     }
 
     fun updateDateOfBirth(newDate: Long) {
-        dateOfBirth = millisToDate(millis = newDate)
+        dataOfBirth = millisToDate(millis = newDate)
     }
 
     fun getSelectDateAsString(): String? {
-        return dateOfBirth.toDDMMYYY()
+        return dataOfBirth.toDDMMYYY()
     }
 
     fun updateIsMale(isMale: Boolean) {
@@ -125,8 +159,16 @@ class RegisteringViewModel() : ViewModel() {
         this.selectedCountry = country
     }
 
-    fun updateIsExpanded(isExpanded: Boolean) {
-        this.isExpanded = isExpanded
+    fun updateIsCountrySelectorExpanded(isExpanded: Boolean) {
+        this.isCountrySelectorExpanded = isExpanded
+    }
+
+    fun updateIsHearAboutUsSelectorExpanded(isExpanded: Boolean) {
+        this.isHearAboutUsSelectorExpanded = isExpanded
+    }
+
+    fun updateIsMedicalConditionExpanded(isExpanded: Boolean) {
+        this.isMedicalConditionExpanded = isExpanded
     }
 
     fun updatePhoneNumber(phoneNumber: String) {
@@ -137,6 +179,18 @@ class RegisteringViewModel() : ViewModel() {
         this.email = email
     }
 
+    fun updateOccupation(occupation: String) {
+        this.occupation = occupation
+    }
+
+    fun updateEmergencyContact(emergencyContact: String) {
+        this.emergencyContact = emergencyContact
+    }
+
+    fun updateHearAboutUs(hearAboutUs: HearAboutUs) {
+        this.hearAboutUs = hearAboutUs
+    }
+
     fun savePersonalInformation(): Boolean {
         return if (firstName.isBlank() || firstName.length < 3) {
             _events.value = RegisteringEvent.ShowSnackbar("First name is required")
@@ -144,7 +198,7 @@ class RegisteringViewModel() : ViewModel() {
         } else if (lastName.isBlank() || lastName.length < 3) {
             _events.value = RegisteringEvent.ShowSnackbar("Last name is required")
             false
-        } else if (dateOfBirth == null) {
+        } else if (dataOfBirth == null) {
             _events.value = RegisteringEvent.ShowSnackbar("Date Of Birth is required")
             false
         } else if (phoneNumber.isBlank()) {
@@ -166,5 +220,90 @@ class RegisteringViewModel() : ViewModel() {
 
     fun resetEvent() {
         _events.value = RegisteringEvent.Reset
+    }
+
+    fun addMedicalCondition(medicalCondition: MedicalCondition) {
+        medicalConditions.add(medicalCondition)
+    }
+
+    fun removeMedicalCondition(medicalCondition: MedicalCondition) {
+        medicalConditions.remove(medicalCondition)
+    }
+
+    fun getMedicalConditionsAsString(): String {
+        var medicalConditionsString = ""
+        if (medicalConditions.isEmpty()) {
+            viewModelScope.launch {
+                medicalConditionsString = getString(Res.string.select_any_medical_conditions)
+            }
+            return medicalConditionsString
+        }
+        medicalConditionsString = ""
+        medicalConditions.forEach {
+            viewModelScope.launch {
+                medicalConditionsString += "${getString(it.name)}, "
+            }
+        }
+        return medicalConditionsString
+    }
+
+    fun isMedicalConditionIsSelected(id: Int): Boolean {
+        medicalConditions.forEach {
+            if (it.id == id) return true
+        }
+        return false
+    }
+
+    fun checkInternetConnection() {
+        viewModelScope.launch {
+            NetworkManager.networkState.collectLatest { networkState ->
+                Log.debug { "Internet is connection : ${networkState}" }
+                isConnected = when (networkState) {
+                    is NetworkState.Reachable -> true
+                    NetworkState.Unreachable -> false
+                }
+            }
+        }
+        Log.debug { "Internet is connection : $isConnected" }
+    }
+
+    fun createUser() {
+        if (emergencyContact.isBlank()) _events.value = RegisteringEvent.ShowSnackbar("Emergency contact is required")
+        else if (hearAboutUs == null) _events.value = RegisteringEvent.ShowSnackbar("How did you hear about us?")
+        else if (occupation.isBlank()) _events.value = RegisteringEvent.ShowSnackbar("Occupation is required")
+        else sendCreateRequest()
+    }
+
+    fun sendCreateRequest() {
+        checkInternetConnection()
+        if (!isConnected) {
+            _events.value = RegisteringEvent.ShowSnackbar("Internet is not connected")
+        } else {
+            isLoading = true
+            Log.debug { "Birth Date: ${dataOfBirth?.date}" }
+            viewModelScope.launch {
+                createUserUseCase.invoke(
+                    UserDTO(
+                        firstName = firstName.trim(),
+                        middleName = lastName.trim(),
+                        lastName = lastName.trim(),
+                        idNumber = idNumber.trim(),
+                        dataOfBirth = dataOfBirth,
+                        sexId = if (isMale) 0 else 1,
+                        phoneNumber = phoneNumber.trim(),
+                        email = email.trim(),
+                        password = password.trim(),
+                        emergencyContact = emergencyContact.trim(),
+                        hearAboutUsId = hearAboutUs?.id!!,
+                        occupation = occupation.trim(),
+                        medicalConditionsIds = medicalConditions.map { it.id }
+                    )
+                ).onError {
+
+                }.onSuccess {
+
+                }
+            }
+        }
     }
 }

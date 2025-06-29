@@ -28,6 +28,7 @@ import com.example.mobile_client_app.common.component.RoundedCornerPasswordTextF
 import com.example.mobile_client_app.common.component.RoundedCornerWithoutBackgroundTextField
 import com.example.mobile_client_app.common.countryPicker.country
 import mobile_client_app.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -166,7 +167,7 @@ fun RegisteringScreen(
                                 )
                             } else {
                                 Text(
-                                    text = "DD/MM/YYYY",
+                                    text = stringResource(Res.string.date_of_birth),
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                             }
@@ -262,16 +263,16 @@ fun RegisteringScreen(
                                     )
                                 }
 
-                                IconButton(onClick = { viewModel.updateIsExpanded(isExpanded = !viewModel.isExpanded) }) {
+                                IconButton(onClick = { viewModel.updateIsCountrySelectorExpanded(isExpanded = !viewModel.isCountrySelectorExpanded) }) {
                                     Icon(
-                                        imageVector = if (viewModel.isExpanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                                        imageVector = if (viewModel.isCountrySelectorExpanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                                         contentDescription = "Expand"
                                     )
                                 }
                             }
                             DropdownMenu(
-                                expanded = viewModel.isExpanded,
-                                onDismissRequest = { viewModel.updateIsExpanded(false) },
+                                expanded = viewModel.isCountrySelectorExpanded,
+                                onDismissRequest = { viewModel.updateIsCountrySelectorExpanded(false) },
                                 modifier = Modifier
                                     .fillMaxWidth(0.9f)
                                     .clip(RoundedCornerShape(50))
@@ -300,7 +301,7 @@ fun RegisteringScreen(
                                         },
                                         onClick = {
                                             viewModel.updateCountry(country)
-                                            viewModel.updateIsExpanded(isExpanded = false)
+                                            viewModel.updateIsCountrySelectorExpanded(isExpanded = false)
                                         }
                                     )
                                 }

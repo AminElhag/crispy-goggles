@@ -1,7 +1,7 @@
 package com.example.mobile_client_app.auth.login.di
 
-import com.example.mobile_client_app.auth.login.data.local.api.UserAPI
-import com.example.mobile_client_app.auth.login.data.local.api.UserAPIImpl
+import com.example.mobile_client_app.auth.login.data.local.api.LoginAPI
+import com.example.mobile_client_app.auth.login.data.local.api.LoginAPIImpl
 import com.example.mobile_client_app.auth.login.domain.repository.UserRepository
 import com.example.mobile_client_app.auth.login.domain.repository.UserRepositoryImpl
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
@@ -13,5 +13,5 @@ val loginModule = module {
     viewModel { LoginViewModel(get()) }
     single { LoginUseCase(get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
-    single<UserAPI> { UserAPIImpl(get()) }
+    single<LoginAPI> { LoginAPIImpl(get()) }
 }
