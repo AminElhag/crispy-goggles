@@ -10,7 +10,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val registeringModule = module {
-    viewModel { RegisteringViewModel(get()) }
+    single { RegisteringViewModel(get()) }
     single { CreateUserUseCase(get()) }
     single<CreateUserRepository> { CreateUserRepositoryImpl(get()) }
     single<RegisteringAPI> { RegisteringAPIImpl(get()) }
