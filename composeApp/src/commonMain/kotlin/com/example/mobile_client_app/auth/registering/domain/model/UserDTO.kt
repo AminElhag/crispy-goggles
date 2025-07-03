@@ -6,7 +6,6 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.serialization.Serializable
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 @Serializable
 data class UserDTO(
@@ -15,7 +14,7 @@ data class UserDTO(
     val lastName: String,
     val idNumber: String,
     val dataOfBirth: LocalDateTime?,
-    val sexId: Int,
+    val genderId: Int,
     val phoneNumber: String,
     val email: String,
     val password: String,
@@ -32,7 +31,7 @@ data class UserDTO(
         lastName = lastName,
         idNumber = idNumber,
         dataOfBirth = dataOfBirth?.toInstant(TimeZone.UTC)?.toLocalDateTime(TimeZone.UTC),
-        sexId = sexId,
+        genderId = genderId,
         phoneNumber = phoneNumber,
         email = email,
         password = password,

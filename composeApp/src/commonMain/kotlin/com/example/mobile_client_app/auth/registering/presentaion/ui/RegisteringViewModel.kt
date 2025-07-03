@@ -4,6 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.registering.domain.model.UserDTO
@@ -14,6 +17,7 @@ import com.example.mobile_client_app.common.NetworkManager
 import com.example.mobile_client_app.common.component.millisToDate
 import com.example.mobile_client_app.common.component.toDDMMYYY
 import com.example.mobile_client_app.common.countryPicker.Country
+import com.example.mobile_client_app.util.network.networkError
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess
 import com.example.mobile_client_app.util.phoneNumberVerification
@@ -36,7 +40,8 @@ sealed interface RegisteringEvent {
 }
 
 class RegisteringViewModel(
-    private val createUserUseCase: CreateUserUseCase
+    private val createUserUseCase: CreateUserUseCase,
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
     var firstName by mutableStateOf("")
         private set
@@ -85,6 +90,22 @@ class RegisteringViewModel(
     var isLoading by mutableStateOf(false)
 
     var isConnected = false
+
+    private val key = stringPreferencesKey("token")
+
+    //need this code on start of app to know if token is available or not
+    /*    private var _name = MutableStateFlow("")
+        val name = _name.asStateFlow()
+
+        init {
+            viewModelScope.launch {
+                dataStore.data.collect { storedData ->
+                    _name.update {
+                        storedData.get(key).orEmpty()
+                    }
+                }
+            }
+        }*/
 
     fun updateFirstName(newName: String) {
         firstName = validName(newName) ?: return
@@ -289,7 +310,7 @@ class RegisteringViewModel(
                         lastName = lastName.trim(),
                         idNumber = idNumber.trim(),
                         dataOfBirth = dataOfBirth,
-                        sexId = if (isMale) 0 else 1,
+                        genderId = if (isMale) 0 else 1,
                         phoneNumber = phoneNumber.trim(),
                         email = email.trim(),
                         password = password.trim(),
@@ -298,10 +319,18 @@ class RegisteringViewModel(
                         occupation = occupation.trim(),
                         medicalConditionsIds = medicalConditions.map { it.id }
                     )
-                ).onError {
-
-                }.onSuccess {
-
+                )?.onError {
+                    isLoading = false
+                    _events.value = RegisteringEvent.ShowSnackbar(message = networkError(it))
+                }?.onSuccess { response ->
+                    viewModelScope.launch {
+                        dataStore.updateData {
+                            it.toMutablePreferences().apply {
+                                set(key,response.token!!)
+                            }
+                        }
+                    }
+                    isLoading = false
                 }
             }
         }

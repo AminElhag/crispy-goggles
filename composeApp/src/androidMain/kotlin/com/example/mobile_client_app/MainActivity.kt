@@ -1,13 +1,19 @@
 package com.example.mobile_client_app
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.example.mobile_client_app.auth.login.di.loginModule
 import com.example.mobile_client_app.auth.registering.di.registeringModule
+import com.example.mobile_client_app.common.DATA_STORE_FILE_NAME
+import com.example.mobile_client_app.common.createDataStore
+import com.example.mobile_client_app.di.dataStoreModule
 import com.example.mobile_client_app.di.networkModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -25,13 +31,20 @@ class MainActivity : ComponentActivity() {
                     loginModule,
                     androidKoinModules,
                     networkModule,
-                    registeringModule
+                    registeringModule,
+                    dataStoreModule
                 )
             )
         }
         setContent {
             App()
         }
+    }
+}
+
+fun createDataStore(context: Context): DataStore<Preferences> {
+    return createDataStore {
+        context.filesDir.resolve(DATA_STORE_FILE_NAME).absolutePath
     }
 }
 

@@ -9,7 +9,7 @@ import com.example.mobile_client_app.util.network.Result
 class CreateUserRepositoryImpl(
     private val registeringAPI: RegisteringAPI
 ) : CreateUserRepository {
-    override suspend fun createUser(user: UserDTO): Result<CreateUserResponse, NetworkError> {
+    override suspend fun createUser(user: UserDTO): Result<CreateUserResponse, NetworkError>? {
         return registeringAPI.registerUser(user.toRequest())
     }
 }

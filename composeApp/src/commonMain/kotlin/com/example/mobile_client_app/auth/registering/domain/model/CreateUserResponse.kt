@@ -1,5 +1,8 @@
 package com.example.mobile_client_app.auth.registering.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CreateUserResponse(
-    var email: String? = null,
+    var token: String? = null,
 )

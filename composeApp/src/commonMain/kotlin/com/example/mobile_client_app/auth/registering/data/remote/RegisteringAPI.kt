@@ -8,5 +8,5 @@ import com.example.mobile_client_app.util.network.Result
 interface RegisteringAPI {
     suspend fun registerUser(
         userRequest: UserRequest
-    ): Result<CreateUserResponse, NetworkError>
+    ): Result<CreateUserResponse, NetworkError>?
 }

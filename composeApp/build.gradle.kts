@@ -62,6 +62,8 @@ kotlin {
             api(libs.konnectivity)
             implementation(libs.log4k)
             implementation(libs.kotlinx.datetime)
+            implementation(libs.datastore)
+            implementation(libs.datastore.preferences)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

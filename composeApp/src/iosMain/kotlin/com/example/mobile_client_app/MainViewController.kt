@@ -1,14 +1,38 @@
 package com.example.mobile_client_app
 
 import androidx.compose.ui.window.ComposeUIViewController
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.example.mobile_client_app.common.DATA_STORE_FILE_NAME
+import com.example.mobile_client_app.common.createDataStore
+import com.example.mobile_client_app.di.dataStoreModule
 import com.example.mobile_client_app.di.initKoin
+import kotlinx.cinterop.ExperimentalForeignApi
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSUserDomainMask
 
 fun MainViewController() = ComposeUIViewController(
     configure = {
         initKoin(
             config = {
-                modules(iosKoinModules)
+                modules(iosKoinModules, dataStoreModule)
             }
         )
     }
 ) { App() }
+
+@OptIn(ExperimentalForeignApi::class)
+fun createDataStore(): DataStore<Preferences> {
+    return createDataStore {
+        val directory = NSFileManager.defaultManager.URLForDirectory(
+            directory = NSDocumentDirectory,
+            inDomain = NSUserDomainMask,
+            appropriateForURL = null,
+            create = false,
+            error = null,
+        )
+
+        requireNotNull(directory).path + "/$DATA_STORE_FILE_NAME"
+    }
+}

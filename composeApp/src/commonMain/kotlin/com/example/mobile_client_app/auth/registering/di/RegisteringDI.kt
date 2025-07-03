@@ -6,11 +6,10 @@ import com.example.mobile_client_app.auth.registering.domain.repository.CreateUs
 import com.example.mobile_client_app.auth.registering.domain.repository.CreateUserRepositoryImpl
 import com.example.mobile_client_app.auth.registering.domain.usecase.CreateUserUseCase
 import com.example.mobile_client_app.auth.registering.presentaion.ui.RegisteringViewModel
-import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val registeringModule = module {
-    single { RegisteringViewModel(get()) }
+    single { RegisteringViewModel(get(),get()) }
     single { CreateUserUseCase(get()) }
     single<CreateUserRepository> { CreateUserRepositoryImpl(get()) }
     single<RegisteringAPI> { RegisteringAPIImpl(get()) }
