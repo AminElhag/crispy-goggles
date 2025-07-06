@@ -37,6 +37,7 @@ import saschpe.log4k.Log
 sealed interface RegisteringEvent {
     object Reset : RegisteringEvent
     data class ShowSnackbar(val message: String) : RegisteringEvent
+    data class ResponseSuccess(val boolean: Boolean) : RegisteringEvent
 }
 
 class RegisteringViewModel(
@@ -330,6 +331,7 @@ class RegisteringViewModel(
                             }
                         }
                     }
+                    _events.value = RegisteringEvent.ResponseSuccess(true)
                     isLoading = false
                 }
             }

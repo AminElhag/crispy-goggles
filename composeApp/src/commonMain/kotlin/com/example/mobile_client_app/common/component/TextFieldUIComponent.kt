@@ -1,5 +1,7 @@
 package com.example.mobile_client_app.common.component
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -29,24 +32,34 @@ fun RoundedCornerWithoutBackgroundTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    hasOutTitle: Boolean = false,
+    title: String = "",
 ) {
-    OutlinedTextField(
-        enabled = enabled,
-        value = value,
-        onValueChange = { onValueChange(it) },
-        placeholder = { Text(placeholder) },
-        modifier = modifier,
-        shape = RoundedCornerShape(25),
-        keyboardOptions = keyboardOptions,
-        maxLines = 1,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-        ),
-    )
+    Column {
+        if (hasOutTitle) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+            )
+        }
+        OutlinedTextField(
+            enabled = enabled,
+            value = value,
+            onValueChange = { onValueChange(it) },
+            placeholder = { Text(placeholder) },
+            modifier = modifier,
+            shape = RoundedCornerShape(25),
+            keyboardOptions = keyboardOptions,
+            maxLines = 1,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            ),
+        )
+    }
 }
 
 @Composable

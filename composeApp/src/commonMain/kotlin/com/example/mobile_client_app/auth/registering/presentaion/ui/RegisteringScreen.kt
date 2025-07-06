@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.mobile_client_app.common.component.DateSection
 import com.example.mobile_client_app.common.component.RoundedCornerButton
 import com.example.mobile_client_app.common.component.RoundedCornerPasswordTextField
 import com.example.mobile_client_app.common.component.RoundedCornerWithoutBackgroundTextField
@@ -57,6 +58,10 @@ fun RegisteringScreen(
                 }
 
                 RegisteringEvent.Reset -> {
+
+                }
+
+                is RegisteringEvent.ResponseSuccess -> {
 
                 }
             }
@@ -145,43 +150,21 @@ fun RegisteringScreen(
                             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     )
-                    Card(
-                        shape = RoundedCornerShape(25),
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
-                        onClick = {
-                            viewModel.updateShowDatePicker(!viewModel.showDatePicker)
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            if (viewModel.getSelectDateAsString() != null) {
-                                Text(
-                                    viewModel.getSelectDateAsString()!!,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            } else {
-                                Text(
-                                    text = stringResource(Res.string.date_of_birth),
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-
-                            IconButton(onClick = {
-                                viewModel.updateShowDatePicker(!viewModel.showDatePicker)
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.CalendarToday,
-                                    contentDescription = "Expand"
-                                )
-                            }
-                        }
-                    }
+                    DateSection(
+                        datePickerState = datePickerState,
+                        onClick = { viewModel.updateShowDatePicker(!viewModel.showDatePicker) },
+                        selectDate = viewModel.getSelectDateAsString(),
+                        hintString = stringResource(Res.string.date_of_birth),
+                        showDatePicker = viewModel.showDatePicker,
+                        updateShowDatePicker = {
+                            viewModel.updateShowDatePicker(it)
+                        },
+                        updateDateOfBirth = {
+                            viewModel.updateDateOfBirth(it)
+                        },
+                        okString = stringResource(Res.string.ok),
+                        cancelString = stringResource(Res.string.cancel)
+                    )
                     Card(
                         shape = RoundedCornerShape(25),
                         modifier = Modifier
@@ -386,30 +369,6 @@ fun RegisteringScreen(
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
                     )
-                }
-            }
-            if (viewModel.showDatePicker) {
-                DatePickerDialog(
-                    onDismissRequest = { viewModel.updateShowDatePicker(false) },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                viewModel.updateDateOfBirth(datePickerState.selectedDateMillis ?: 0)
-                                viewModel.updateShowDatePicker(false)
-                            }
-                        ) {
-                            Text("OK")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(
-                            onClick = { viewModel.updateShowDatePicker(false) }
-                        ) {
-                            Text("Cancel")
-                        }
-                    }
-                ) {
-                    DatePicker(state = datePickerState)
                 }
             }
         }

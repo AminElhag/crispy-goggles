@@ -31,6 +31,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun AdditionInformationScreen(
     viewModel: RegisteringViewModel = koinViewModel(),
     onNavigateToBackPage: () -> Unit,
+    onCreateUserSuccess: () -> Unit,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -50,6 +51,10 @@ fun AdditionInformationScreen(
 
                 RegisteringEvent.Reset -> {
 
+                }
+
+                is RegisteringEvent.ResponseSuccess -> {
+                    onCreateUserSuccess()
                 }
             }
         }
