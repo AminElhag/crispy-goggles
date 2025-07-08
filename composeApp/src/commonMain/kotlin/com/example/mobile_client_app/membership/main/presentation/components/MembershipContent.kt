@@ -1,13 +1,6 @@
 package com.example.mobile_client_app.membership.main.presentation.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DatePickerState
@@ -21,15 +14,8 @@ import com.example.mobile_client_app.common.component.DateSection
 import com.example.mobile_client_app.common.component.RoundedCornerButton
 import com.example.mobile_client_app.common.component.RoundedCornerWithoutBackgroundTextField
 import com.example.mobile_client_app.membership.main.presentation.MembershipViewModel
-import com.example.mobile_client_app.membership.main.presentation.Plan
-import mobile_client_app.composeapp.generated.resources.Res
-import mobile_client_app.composeapp.generated.resources.cancel
-import mobile_client_app.composeapp.generated.resources.continue_string
-import mobile_client_app.composeapp.generated.resources.ok
-import mobile_client_app.composeapp.generated.resources.promo_code
-import mobile_client_app.composeapp.generated.resources.start_Date
+import mobile_client_app.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +30,7 @@ fun MembershipContent(
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
-    ) { // Responsive plan cards
+    ) {
         val isWideScreen = /*LocalConfiguration.current.screenWidthDp > 600*/ false
         val arrangement = if (isWideScreen)
             Arrangement.spacedBy(16.dp) else Arrangement.spacedBy(16.dp)
@@ -59,30 +45,31 @@ fun MembershipContent(
         }*/
         if (isWideScreen) {
             Row(horizontalArrangement = arrangement, modifier = Modifier.fillMaxWidth()) {
-                Plan.entries.forEach { plan ->
+                viewModel.plans!!.plans.forEach { plan ->
                     PlanCard(
                         plan = plan,
                         isSelected = plan == viewModel.selectedPlan,
-                        onSelect = { viewModel.selectedPlan = plan },
+                        onSelect = { viewModel.updateSelectedPlan(plan) },
                         modifier = if (isWideScreen) Modifier.weight(1f) else Modifier.fillMaxWidth()
                     )
                 }
             }
         } else {
             Column(verticalArrangement = arrangement, modifier = Modifier.fillMaxWidth()) {
-                Plan.entries.forEach { plan ->
+                viewModel.plans!!.plans.forEach { plan ->
                     PlanCard(
                         plan = plan,
                         isSelected = plan == viewModel.selectedPlan,
-                        onSelect = { viewModel.selectedPlan = plan },
+                        onSelect = { viewModel.updateSelectedPlan(plan) },
                         modifier = if (isWideScreen) Modifier.weight(1f) else Modifier.fillMaxWidth()
                     )
                 }
             }
         }
 
-        // Contract Type
-        ContractSection(viewModel)
+        if (!viewModel.contractOptions.isEmpty()){
+            ContractSection(viewModel)
+        }
 
         // Start Date
         DateSection(

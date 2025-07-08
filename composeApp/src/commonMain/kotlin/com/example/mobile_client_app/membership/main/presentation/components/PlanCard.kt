@@ -16,12 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.mobile_client_app.membership.main.presentation.Plan
+import com.example.mobile_client_app.membership.main.domain.model.PlanResponse
 
 
 @Composable
 fun PlanCard(
-    plan: Plan,
+    plan: PlanResponse,
     isSelected: Boolean,
     onSelect: () -> Unit,
     modifier: Modifier = Modifier
@@ -30,7 +30,7 @@ fun PlanCard(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = /*if (isSelected) Color(0xFFE8F5E9) else*/ MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+            containerColor = if (isSelected) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f) else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
         ),
         border = /*if (isSelected) CardDefaults.outlinedCardBorder() else null*/ CardDefaults.outlinedCardBorder(),
     ) {

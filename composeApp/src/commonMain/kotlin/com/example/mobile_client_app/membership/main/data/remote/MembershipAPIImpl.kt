@@ -16,7 +16,7 @@ class MembershipAPIImpl(
 ) : MembershipAPI {
     override suspend fun getMembership(token: String): Result<MembershipResponse, NetworkError> {
         val response = try {
-            httpClient.get("http://192.168.113.17:8080/api/v1/client/memberships") {
+            httpClient.get("http://10.55.107.17:8080/api/v1/membership") {
                 headers["Bearer"] = token
                 contentType(ContentType.Application.Json)
             }

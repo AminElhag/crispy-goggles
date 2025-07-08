@@ -9,28 +9,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mobile_client_app.membership.main.presentation.ContractType
 import com.example.mobile_client_app.membership.main.presentation.MembershipViewModel
+import mobile_client_app.composeapp.generated.resources.Res
+import mobile_client_app.composeapp.generated.resources.membership
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
 fun ContractSection(viewModel: MembershipViewModel) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
-            text = "Contract",
+            text = stringResource(Res.string.membership),
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
 
-        ContractOption(
-            text = "12-month contract",
-            subText = "12 months",
-            isSelected = viewModel.contractType == ContractType.YEARLY,
-            onSelect = { viewModel.contractType = ContractType.YEARLY }
-        )
+        viewModel.contractOptions.forEach {option ->
+            ContractOption(
+                text = option.title,
+                subText = option.description,
+                isSelected = viewModel.isContractOptionSelected(option),
+                onSelect = { viewModel.selectContractOption(option) }
+            )
+        }
 
-        ContractOption(
-            text = "Month-to-month",
-            subText = "Month-to-month",
-            isSelected = viewModel.contractType == ContractType.MONTHLY,
-            onSelect = { viewModel.contractType = ContractType.MONTHLY }
-        )
     }
 }

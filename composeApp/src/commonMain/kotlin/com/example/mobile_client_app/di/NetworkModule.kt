@@ -29,7 +29,13 @@ fun provideHttpClient(engine: HttpClientEngine): HttpClient {
             level = LogLevel.ALL
         }
         install(ContentNegotiation) {
-            json()
+            json(
+                Json {
+                    ignoreUnknownKeys = true
+                    coerceInputValues = true
+                    explicitNulls = false
+                }
+            )
         }
         install(HttpTimeout) {
             requestTimeoutMillis = 30_000
