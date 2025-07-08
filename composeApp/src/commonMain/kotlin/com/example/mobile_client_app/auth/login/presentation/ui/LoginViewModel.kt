@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.login.domain.usecase.LoginUseCase
 import com.example.mobile_client_app.common.NetworkManager
 import com.example.mobile_client_app.common.countryPicker.Country
+import com.example.mobile_client_app.util.network.checkInternetConnection
 import com.example.mobile_client_app.util.network.networkError
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess
@@ -47,8 +48,8 @@ class LoginViewModel(
     var isConnected = false
 
     fun login() {
+        isConnected = checkInternetConnection(viewModelScope)
         viewModelScope.launch {
-            checkInternetConnection()
             if (!isConnected) {
                 _events.value = LoginEvent.ShowSnackbar("Internet is not connected")
             } else if (isPhoneSelected && phoneNumber.isBlank()) {
@@ -110,18 +111,5 @@ class LoginViewModel(
 
     fun resetEvent() {
         _events.value = LoginEvent.Reset
-    }
-
-    fun checkInternetConnection() {
-        viewModelScope.launch {
-            NetworkManager.networkState.collectLatest { networkState ->
-                Log.debug { "Internet is connection : ${networkState}" }
-                isConnected = when (networkState) {
-                    is NetworkState.Reachable -> true
-                    NetworkState.Unreachable -> false
-                }
-            }
-        }
-        Log.debug { "Internet is connection : $isConnected" }
     }
 }

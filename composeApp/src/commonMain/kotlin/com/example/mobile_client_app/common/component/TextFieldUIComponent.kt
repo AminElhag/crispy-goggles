@@ -37,7 +37,7 @@ fun RoundedCornerWithoutBackgroundTextField(
     title: String = "",
 ) {
     Column {
-        if (hasOutTitle) {
+        if (title.isNotEmpty()) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)

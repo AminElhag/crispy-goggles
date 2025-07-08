@@ -25,8 +25,11 @@ fun DateSection(
     updateDateOfBirth: (Long) -> Unit,
     okString: String,
     cancelString: String,
+    modifier: Modifier = Modifier,
 ) {
-    Column {
+    Column(
+        modifier = modifier,
+    ) {
         if (hasOutTitle) {
             Text(
                 text = title,

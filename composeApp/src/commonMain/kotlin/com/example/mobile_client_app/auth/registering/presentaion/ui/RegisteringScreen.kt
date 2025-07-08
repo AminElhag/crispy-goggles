@@ -112,25 +112,23 @@ fun RegisteringScreen(
             ) {
                 Column {
                     Row(
-                        modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+                        modifier = Modifier.fillMaxWidth().height(80.dp)
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         RoundedCornerWithoutBackgroundTextField(
                             value = viewModel.firstName,
                             onValueChange = { viewModel.updateFirstName(it) },
                             placeholder = stringResource(Res.string.first_name),
                             modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                                .width(170.dp),
                         )
                         RoundedCornerWithoutBackgroundTextField(
                             value = viewModel.middleName,
                             onValueChange = { viewModel.updateMiddleName(it) },
                             placeholder = stringResource(Res.string.middle_name),
                             modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                                .width(170.dp),
                         )
                     }
                     RoundedCornerWithoutBackgroundTextField(
@@ -139,7 +137,7 @@ fun RegisteringScreen(
                         placeholder = stringResource(Res.string.last_name),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
                     )
                     RoundedCornerWithoutBackgroundTextField(
                         value = viewModel.idNumber,
@@ -147,7 +145,7 @@ fun RegisteringScreen(
                         placeholder = stringResource(Res.string.id_number),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                            .padding(start = 16.dp, end = 16.dp, top = 8.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     )
                     DateSection(
@@ -163,7 +161,9 @@ fun RegisteringScreen(
                             viewModel.updateDateOfBirth(it)
                         },
                         okString = stringResource(Res.string.ok),
-                        cancelString = stringResource(Res.string.cancel)
+                        cancelString = stringResource(Res.string.cancel),
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        hasOutTitle = false
                     )
                     Card(
                         shape = RoundedCornerShape(25),
@@ -213,7 +213,7 @@ fun RegisteringScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .padding(horizontal = 16.dp)
                     ) {
                         Card(
                             shape = RoundedCornerShape(25),
@@ -297,7 +297,7 @@ fun RegisteringScreen(
                         placeholder = { Text(stringResource(Res.string.phone)) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .padding(horizontal = 16.dp, vertical = 16.dp)
                             .clip(RoundedCornerShape(25)),
                         shape = RoundedCornerShape(25),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
@@ -328,7 +328,7 @@ fun RegisteringScreen(
                         placeholder = stringResource(Res.string.email),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp)
+                            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
                             .clip(RoundedCornerShape(25)),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     )

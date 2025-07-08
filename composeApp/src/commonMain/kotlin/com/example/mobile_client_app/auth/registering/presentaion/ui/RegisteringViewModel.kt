@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.auth.registering.domain.model.UserDTO
@@ -17,6 +16,7 @@ import com.example.mobile_client_app.common.NetworkManager
 import com.example.mobile_client_app.common.component.millisToDate
 import com.example.mobile_client_app.common.component.toDDMMYYY
 import com.example.mobile_client_app.common.countryPicker.Country
+import com.example.mobile_client_app.common.TOKEN_KEY
 import com.example.mobile_client_app.util.network.networkError
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess
@@ -91,8 +91,6 @@ class RegisteringViewModel(
     var isLoading by mutableStateOf(false)
 
     var isConnected = false
-
-    private val key = stringPreferencesKey("token")
 
     //need this code on start of app to know if token is available or not
     /*    private var _name = MutableStateFlow("")
@@ -327,7 +325,7 @@ class RegisteringViewModel(
                     viewModelScope.launch {
                         dataStore.updateData {
                             it.toMutablePreferences().apply {
-                                set(key,response.token!!)
+                                set(TOKEN_KEY,response.token!!)
                             }
                         }
                     }

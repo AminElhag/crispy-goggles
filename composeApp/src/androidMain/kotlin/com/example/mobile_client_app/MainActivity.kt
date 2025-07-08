@@ -15,6 +15,7 @@ import com.example.mobile_client_app.common.DATA_STORE_FILE_NAME
 import com.example.mobile_client_app.common.createDataStore
 import com.example.mobile_client_app.di.dataStoreModule
 import com.example.mobile_client_app.di.networkModule
+import com.example.mobile_client_app.membership.main.di.membershipModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -32,7 +33,8 @@ class MainActivity : ComponentActivity() {
                     androidKoinModules,
                     networkModule,
                     registeringModule,
-                    dataStoreModule
+                    dataStoreModule,
+                    membershipModule,
                 )
             )
         }
