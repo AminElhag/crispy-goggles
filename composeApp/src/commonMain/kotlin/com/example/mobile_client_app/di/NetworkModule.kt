@@ -48,8 +48,7 @@ fun provideHttpClient(
                     ignoreUnknownKeys = true
                     coerceInputValues = true
                     explicitNulls = false
-                }
-            )
+                })
         }
         install(HttpTimeout) {
             requestTimeoutMillis = 30_000
@@ -57,11 +56,9 @@ fun provideHttpClient(
             socketTimeoutMillis = 30_000
         }
         install(Auth) {
-            tokenManager.getToken()?.let {
-                bearer {
-                    loadTokens {
-                        BearerTokens(it, it)
-                    }
+            bearer {
+                loadTokens {
+                    tokenManager.getToken()?.let { BearerTokens(it, it) }
                 }
             }
         }
