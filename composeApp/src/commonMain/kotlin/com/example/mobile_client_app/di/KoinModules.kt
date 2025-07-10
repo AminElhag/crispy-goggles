@@ -1,16 +1,8 @@
 package com.example.mobile_client_app.di
 
-import androidx.compose.ui.autofill.ContentType
-import com.example.mobile_client_app.auth.login.di.loginModule
-import com.example.mobile_client_app.auth.registering.di.registeringModule
-import com.example.mobile_client_app.membership.main.di.membershipModule
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.utils.EmptyContent.contentType
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
+import com.example.mobile_client_app.features.auth.login.di.loginModule
+import com.example.mobile_client_app.features.auth.registering.di.registeringModule
+import com.example.mobile_client_app.features.membership.main.di.membershipModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 

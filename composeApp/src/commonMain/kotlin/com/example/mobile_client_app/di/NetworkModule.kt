@@ -11,6 +11,8 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
@@ -65,6 +67,7 @@ fun provideHttpClient(
         defaultRequest {
             host = "10.55.107.17"
             port = 8080
+            contentType(ContentType.Application.Json)
         }
     }
 }

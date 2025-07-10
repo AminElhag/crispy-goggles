@@ -9,13 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import com.example.mobile_client_app.auth.login.di.loginModule
-import com.example.mobile_client_app.auth.registering.di.registeringModule
+import com.example.mobile_client_app.features.auth.login.di.loginModule
+import com.example.mobile_client_app.features.auth.registering.di.registeringModule
 import com.example.mobile_client_app.common.DATA_STORE_FILE_NAME
 import com.example.mobile_client_app.common.createDataStore
 import com.example.mobile_client_app.di.dataStoreModule
 import com.example.mobile_client_app.di.networkModule
-import com.example.mobile_client_app.membership.main.di.membershipModule
+import com.example.mobile_client_app.features.membership.main.di.membershipModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

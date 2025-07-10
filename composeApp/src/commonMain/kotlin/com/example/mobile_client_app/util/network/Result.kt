@@ -1,22 +1,22 @@
 package com.example.mobile_client_app.util.network
 
-sealed interface Result<out D, out E : Error> {
+sealed interface Result<out D, out E : Exception> {
     data class Success<out D>(val data: D) : Result<D, Nothing>
-    data class Error<out E : com.example.mobile_client_app.util.network.Error>(val error: E) : Result<Nothing, E>
+    data class Error<out E : Exception>(val error: E) : Result<Nothing, E>
 }
 
-inline fun <T, E : Error, R> Result<T, E>.map(map: (T) -> R): Result<R, E> {
+inline fun <T, E : Exception, R> Result<T, E>.map(map: (T) -> R): Result<R, E> {
     return when (this) {
         is Result.Error -> Result.Error(error)
         is Result.Success -> Result.Success(map(data))
     }
 }
 
-fun <T, E : Error> Result<T, E>.asEmptyDataResult(): EmptyResult<E> {
+fun <T, E : Exception> Result<T, E>.asEmptyDataResult(): EmptyResult<E> {
     return map { }
 }
 
-inline fun <T, E : Error> Result<T, E>.onSuccess(action: (T) -> Unit): Result<T, E> {
+inline fun <T, E : Exception> Result<T, E>.onSuccess(action: (T) -> Unit): Result<T, E> {
     return when (this) {
         is Result.Error -> this
         is Result.Success -> {
@@ -26,7 +26,7 @@ inline fun <T, E : Error> Result<T, E>.onSuccess(action: (T) -> Unit): Result<T,
     }
 }
 
-inline fun <T, E : Error> Result<T, E>.onError(action: (E) -> Unit): Result<T, E> {
+inline fun <T, E : Exception> Result<T, E>.onError(action: (E) -> Unit): Result<T, E> {
     return when (this) {
         is Result.Error -> {
             action(error)
