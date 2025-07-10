@@ -18,6 +18,7 @@ import com.example.mobile_client_app.common.countryPicker.Country
 import com.example.mobile_client_app.features.auth.registering.domain.model.UserDTO
 import com.example.mobile_client_app.features.auth.registering.domain.usecase.CreateUserUseCase
 import com.example.mobile_client_app.util.network.NetworkError
+import com.example.mobile_client_app.util.network.checkInternetConnection
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess
 import com.example.mobile_client_app.util.phoneNumberVerification
@@ -284,19 +285,6 @@ class RegisteringViewModel(
         return false
     }
 
-    fun checkInternetConnection() {
-        viewModelScope.launch {
-            NetworkManager.networkState.collectLatest { networkState ->
-                Log.debug { "Internet is connection : ${networkState}" }
-                isConnected = when (networkState) {
-                    is NetworkState.Reachable -> true
-                    NetworkState.Unreachable -> false
-                }
-            }
-        }
-        Log.debug { "Internet is connection : $isConnected" }
-    }
-
     fun createUser() {
         if (emergencyContact.isBlank()) _events.value = RegisteringEvent.ShowSnackbar("Emergency contact is required")
         else if (hearAboutUs == null) _events.value = RegisteringEvent.ShowSnackbar("How did you hear about us?")
@@ -305,7 +293,7 @@ class RegisteringViewModel(
     }
 
     fun sendCreateRequest() {
-        checkInternetConnection()
+        checkInternetConnection(viewModelScope)
         if (!isConnected) {
             _events.value = RegisteringEvent.ShowSnackbar("Internet is not connected")
         } else {

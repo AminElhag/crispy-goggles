@@ -66,12 +66,6 @@ class LoginViewModel(
                         isLoading = false
                         _events.value = LoginEvent.ShowSnackbar(message = it.message ?: "Unknown error")
                     }
-                try {
-                    loginUseCase(emailOrPhone, password)
-
-                }catch (e: NetworkError){
-
-                }
             }
         }
     }
