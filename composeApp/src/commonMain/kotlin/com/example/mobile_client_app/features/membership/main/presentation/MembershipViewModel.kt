@@ -143,13 +143,13 @@ class MembershipViewModel(
         } else if (promoCode.isNotBlank()) {
             if (promoCode.length != 8) {
                 _events.value = MembershipEvent.ShowSnackbar("Promo code must be 8 digits")
-                return
-            }
-            viewModelScope.launch {
-                checkPromoCodeUseCase.invoke(promoCode).onSuccess { response ->
-                    sendCompleteRequest()
-                }.onError {error ->
-                    _events.value = MembershipEvent.ShowSnackbar(error.displayMessage)
+            }else{
+                viewModelScope.launch {
+                    checkPromoCodeUseCase.invoke(promoCode).onSuccess { response ->
+                        sendCompleteRequest()
+                    }.onError {error ->
+                        _events.value = MembershipEvent.ShowSnackbar(error.displayMessage)
+                    }
                 }
             }
         } else {

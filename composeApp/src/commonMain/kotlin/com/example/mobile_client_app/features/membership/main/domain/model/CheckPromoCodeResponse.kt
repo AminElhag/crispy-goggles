@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CheckPromoCodeResponse(
-    @SerialName("is_valid") val isValid: Boolean,
+    @SerialName("is_valid") val isValid: Boolean=false,
 )

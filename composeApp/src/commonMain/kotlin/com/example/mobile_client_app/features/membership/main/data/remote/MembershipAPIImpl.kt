@@ -44,7 +44,6 @@ class MembershipAPIImpl(
         val response = try {
             httpClient.get("/api/v1/promocode/check") {
                 parameter("promo_code", promoCode)
-                contentType(ContentType.Application.Json)
             }
         } catch (e: NetworkError) {
             return Result.Error(e)
@@ -59,7 +58,7 @@ class MembershipAPIImpl(
             }
 
             else -> {
-                Result.Error(response.body())
+                Result.Error(response.toException())
             }
 
             /*401 -> Result.Error(NetworkError.UNAUTHORIZED)

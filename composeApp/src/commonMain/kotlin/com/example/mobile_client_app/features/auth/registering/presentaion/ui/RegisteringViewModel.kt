@@ -293,7 +293,7 @@ class RegisteringViewModel(
     }
 
     fun sendCreateRequest() {
-        checkInternetConnection(viewModelScope)
+        isConnected = checkInternetConnection(viewModelScope)
         if (!isConnected) {
             _events.value = RegisteringEvent.ShowSnackbar("Internet is not connected")
         } else {
