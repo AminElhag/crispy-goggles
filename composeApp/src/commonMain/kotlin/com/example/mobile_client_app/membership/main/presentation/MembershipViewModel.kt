@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
+import saschpe.log4k.Log
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
 import kotlin.time.ExperimentalTime
@@ -36,7 +37,11 @@ sealed class UiState<out T> {
     object Loading : UiState<Nothing>()
     data class Error(val message: String) : UiState<Nothing>()
     data class Success<T>(val data: T) : UiState<T>()
-    data class ShowSnackbar(val message: String) : UiState<Nothing>()
+}
+
+sealed class MembershipEvent {
+    object Reset : MembershipEvent()
+    data class ShowSnackbar(val message: String) : MembershipEvent()
 }
 
 class MembershipViewModel(
@@ -47,6 +52,9 @@ class MembershipViewModel(
 
     private var _uiState = MutableStateFlow<UiState<MembershipResponse>>(UiState.Loading)
     val uiState: StateFlow<UiState<MembershipResponse>> = _uiState
+
+    private val _events = MutableStateFlow<MembershipEvent>(MembershipEvent.Reset)
+    val events: StateFlow<MembershipEvent> = _events
 
     var isConnected = false
 
@@ -137,18 +145,19 @@ class MembershipViewModel(
 
     fun onCheckInfo() {
         if (selectedPlan == null) {
-            _uiState.value = UiState.ShowSnackbar("Select your plan")
+            Log.debug { "Selected plan is null" }
+            _events.value = MembershipEvent.ShowSnackbar("Select your plan")
         }else if (startDate == null) {
-            _uiState.value = UiState.ShowSnackbar("You need to select the day that you want to start on it")
+            _events.value = MembershipEvent.ShowSnackbar("You need to select the day that you want to start on it")
         }else if (promoCode.isNotBlank()) {
             if (promoCode.length != 8) {
-                _uiState.value = UiState.ShowSnackbar("Promo code must be 8 digits")
+                _events.value = MembershipEvent.ShowSnackbar("Promo code must be 8 digits")
                 return
             }
             viewModelScope.launch {
                 checkPromoCodeUseCase.invoke(promoCode)
                     .onError {
-                        _uiState.value = UiState.ShowSnackbar(networkError(it))
+                        _events.value = MembershipEvent.ShowSnackbar(networkError(it))
                     }.onSuccess {
                         sendCompleteRequest()
                     }
@@ -159,6 +168,10 @@ class MembershipViewModel(
     }
 
     fun sendCompleteRequest() {
+
+    }
+
+    fun resetEvent() {
 
     }
 }

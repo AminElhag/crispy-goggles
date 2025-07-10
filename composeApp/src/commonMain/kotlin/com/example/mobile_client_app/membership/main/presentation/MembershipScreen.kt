@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,7 +38,6 @@ fun MembershipScreen(
             }
         }
     )
-    val snackbarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -47,30 +47,11 @@ fun MembershipScreen(
                 errorMessage = state.message,
                 onRetry = { viewModel.fetchMembershipPlans() }
             )
-            is UiState.Success -> Scaffold(
-                topBar = {
-                    CenterAlignedTopAppBar(
-                        title = { Text(stringResource(Res.string.membership)) },
-                        /*navigationIcon = {
-                            IconButton(onClick = onNavigateToBackPage) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                            }
-                        }*/
-                    )
-                },
-                content = { innerPadding ->
-                    MembershipContent(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .verticalScroll(rememberScrollState()),
-                        viewModel = viewModel,
-                        onContinue = {viewModel.onCheckInfo()},
-                        datePickerState = datePickerState
-                    )
-                }
+            is UiState.Success -> MembershipContent(
+                viewModel = viewModel,
+                onContinue = {viewModel.onCheckInfo()},
+                datePickerState = datePickerState
             )
-
-            is UiState.ShowSnackbar -> TODO()
         }
     }
 }
