@@ -14,7 +14,7 @@ import com.example.mobile_client_app.membership.main.presentation.MembershipScre
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = AppScreen.Membership.route
+        startDestination = AppScreen.Registering.route
     ) {
         composable(AppScreen.Login.route) {
             LoginScreen(onNavigateToRegisteringScreen = {

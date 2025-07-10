@@ -9,7 +9,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
@@ -29,7 +28,6 @@ import com.example.mobile_client_app.common.component.RoundedCornerPasswordTextF
 import com.example.mobile_client_app.common.component.RoundedCornerWithoutBackgroundTextField
 import com.example.mobile_client_app.common.countryPicker.country
 import mobile_client_app.composeapp.generated.resources.*
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -41,7 +39,14 @@ fun RegisteringScreen(
     onNavigateToBackPage: () -> Unit,
     onNavigateToAdditionInformation: () -> Unit,
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = viewModel.today,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis < viewModel.today
+            }
+        }
+    )
     val snackbarHostState = remember { SnackbarHostState() }
 
     val event = viewModel.events.collectAsState().value

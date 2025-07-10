@@ -1,5 +1,6 @@
 package com.example.mobile_client_app.membership.main.data.remote
 
+import com.example.mobile_client_app.membership.main.domain.model.CheckPromoCodeResponse
 import com.example.mobile_client_app.membership.main.domain.model.MembershipResponse
 import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.Result
@@ -14,10 +15,9 @@ import saschpe.log4k.Log
 class MembershipAPIImpl(
     private val httpClient: HttpClient
 ) : MembershipAPI {
-    override suspend fun getMembership(token: String): Result<MembershipResponse, NetworkError> {
+    override suspend fun getMembership(): Result<MembershipResponse, NetworkError> {
         val response = try {
-            httpClient.get("http://10.55.107.17:8080/api/v1/membership") {
-                headers["Bearer"] = token
+            httpClient.get("/api/v1/membership") {
                 contentType(ContentType.Application.Json)
             }
         } catch (e: UnresolvedAddressException) {
@@ -42,5 +42,36 @@ class MembershipAPIImpl(
             else -> Result.Error(NetworkError.UNKNOWN)
         }
 
+    }
+
+    override suspend fun checkPromoCode(promoCode: String): Result<CheckPromoCodeResponse, NetworkError> {
+        val response = try {
+            httpClient.get("/api/v1/promocode/check") {
+                parameter("promo_code", promoCode)
+                contentType(ContentType.Application.Json)
+            }
+        } catch (e: UnresolvedAddressException) {
+            Log.error("Caught exception: ${e.message}", e)
+            return Result.Error(NetworkError.NO_INTERNET)
+        } catch (e: SerializationException) {
+            Log.error("Caught exception: ${e.message}", e)
+            return Result.Error(NetworkError.SERIALIZATION)
+        } catch (e: Exception) {
+            Log.error("Caught exception: ${e.message}", e)
+            return Result.Error(NetworkError.UNKNOWN)
+        }
+        return when (response.status.value) {
+            in 200..299 -> {
+                val response = response.body<CheckPromoCodeResponse>()
+                Result.Success(response)
+            }
+
+            401 -> Result.Error(NetworkError.UNAUTHORIZED)
+            409 -> Result.Error(NetworkError.CONFLICT)
+            408 -> Result.Error(NetworkError.REQUEST_TIMEOUT)
+            413 -> Result.Error(NetworkError.PAYLOAD_TOO_LARGE)
+            in 500..599 -> Result.Error(NetworkError.SERVER_ERROR)
+            else -> Result.Error(NetworkError.UNKNOWN)
+        }
     }
 }

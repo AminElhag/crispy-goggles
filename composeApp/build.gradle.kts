@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.auth)
             api(libs.konnectivity)
             implementation(libs.log4k)
             implementation(libs.kotlinx.datetime)
@@ -103,6 +104,7 @@ android {
 
 dependencies {
     implementation("io.ktor:ktor-client-okhttp-jvm:3.1.3")
+    implementation("io.ktor:ktor-client-auth:3.1.3")
     debugImplementation(compose.uiTooling)
 }
 

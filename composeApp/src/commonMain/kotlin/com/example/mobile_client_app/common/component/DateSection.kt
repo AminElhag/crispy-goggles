@@ -89,9 +89,9 @@ fun DateSection(
                         ) {
                             Text(cancelString)
                         }
-                    }
+                    },
                 ) {
-                    DatePicker(state = datePickerState)
+                    DatePicker(state = datePickerState,)
                 }
             }
         }

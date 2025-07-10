@@ -33,6 +33,9 @@ import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.select_any_medical_conditions
 import org.jetbrains.compose.resources.getString
 import saschpe.log4k.Log
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.ExperimentalTime
 
 sealed interface RegisteringEvent {
     object Reset : RegisteringEvent
@@ -92,6 +95,13 @@ class RegisteringViewModel(
 
     var isConnected = false
 
+    @OptIn(ExperimentalTime::class)
+    var today = Clock.System.now().toEpochMilliseconds()
+        private set
+
+    @OptIn(ExperimentalTime::class)
+    var maxDate = Clock.System.now().plus(duration = 7.days).toEpochMilliseconds()
+        private set
     //need this code on start of app to know if token is available or not
     /*    private var _name = MutableStateFlow("")
         val name = _name.asStateFlow()

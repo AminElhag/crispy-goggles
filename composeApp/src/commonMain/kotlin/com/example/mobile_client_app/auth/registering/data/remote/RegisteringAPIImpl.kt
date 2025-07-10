@@ -16,7 +16,7 @@ class RegisteringAPIImpl(
 ) : RegisteringAPI {
     override suspend fun registerUser(userRequest: UserRequest): Result<CreateUserResponse, NetworkError>? {
         val response = try {
-            httpClient.post("http://192.168.113.17:8080/api/v1/client/register") {
+            httpClient.post("/api/v1/client/register") {
                 setBody(userRequest)
                 contentType(ContentType.Application.Json)
             }

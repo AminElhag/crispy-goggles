@@ -13,7 +13,9 @@ import com.example.mobile_client_app.common.component.toDDMMYYY
 import com.example.mobile_client_app.membership.main.domain.model.ContractOption
 import com.example.mobile_client_app.membership.main.domain.model.MembershipResponse
 import com.example.mobile_client_app.membership.main.domain.model.PlanResponse
-import com.example.mobile_client_app.membership.main.domain.usercase.GetMembershipUserCase
+import com.example.mobile_client_app.membership.main.domain.useCase.CheckPromoCodeUseCase
+import com.example.mobile_client_app.membership.main.domain.useCase.CheckoutInitUseCase
+import com.example.mobile_client_app.membership.main.domain.useCase.GetMembershipUseCase
 import com.example.mobile_client_app.util.network.checkInternetConnection
 import com.example.mobile_client_app.util.network.networkError
 import com.example.mobile_client_app.util.network.onError
@@ -25,34 +27,29 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-
-
-enum class ContractType {
-    YEARLY, MONTHLY
-}
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.days
+import kotlin.time.ExperimentalTime
 
 sealed class UiState<out T> {
     object Loading : UiState<Nothing>()
     data class Error(val message: String) : UiState<Nothing>()
     data class Success<T>(val data: T) : UiState<T>()
+    data class ShowSnackbar(val message: String) : UiState<Nothing>()
 }
 
 class MembershipViewModel(
-    private val getMembershipUserCase: GetMembershipUserCase,
-    private val dataStore: DataStore<Preferences>
+    private val getMembershipUseCase: GetMembershipUseCase,
+    private val checkPromoCodeUseCase: CheckPromoCodeUseCase,
+    private val checkoutInitUseCase: CheckoutInitUseCase,
 ) : ViewModel() {
 
     private var _uiState = MutableStateFlow<UiState<MembershipResponse>>(UiState.Loading)
     val uiState: StateFlow<UiState<MembershipResponse>> = _uiState
 
-    private var _token = MutableStateFlow("")
-    val token = _token.asStateFlow()
     var isConnected = false
 
-    var contractType by mutableStateOf(ContractType.YEARLY)
-    var startDate by mutableStateOf<LocalDate?>(null)
     var promoCode by mutableStateOf("")
         private set
     var plans by mutableStateOf<MembershipResponse?>(null)
@@ -64,6 +61,15 @@ class MembershipViewModel(
     var selectedContractOption by mutableStateOf<ContractOption?>(null)
         private set
 
+    @OptIn(ExperimentalTime::class)
+    var today = Clock.System.now().toEpochMilliseconds()
+        private set
+
+    @OptIn(ExperimentalTime::class)
+    var maxDate = Clock.System.now().plus(duration = 7.days).toEpochMilliseconds()
+        private set
+
+
     init {
         fetchMembershipPlans()
     }
@@ -73,44 +79,26 @@ class MembershipViewModel(
         isConnected = checkInternetConnection(viewModelScope)
         if (isConnected) {
             CoroutineScope(Dispatchers.Default).launch {
-                dataStore.data.collect { storedData ->
-                    _token.update {
-                        storedData[TOKEN_KEY].orEmpty()
-                    }
-                    getMembershipUserCase.invoke(_token.value).onError {
-                        _uiState.value = UiState.Error(networkError(it))
-                    }.onSuccess { it ->
-                        plans = it
-                        if (plans != null) {
-                            _uiState.value = UiState.Success(it)
-                        } else {
-                            _uiState.value = UiState.Error("Server error")
-                        }
+                getMembershipUseCase.invoke().onError {
+                    _uiState.value = UiState.Error(networkError(it))
+                }.onSuccess { it ->
+                    plans = it
+                    if (plans != null) {
+                        _uiState.value = UiState.Success(it)
+                    } else {
+                        _uiState.value = UiState.Error("Server error")
                     }
                 }
             }
         } else {
             _uiState.value = UiState.Error("Failed to load data. Please check your connection.")
         }
-
-
-        /*viewModelScope.launch {
-            getMembershipUserCase.invoke(token.value);
-            *//*try {
-                apiState.value = ApiState.Loading
-                val response = MembershipApiService.getPlans()
-                plans.value = response
-                apiState.value = ApiState.Success
-            } catch (e: Exception) {
-                apiState.value = ApiState.Error(e.message ?: "Unknown error")
-            }*//*
-        }*/
     }
 
     var showDatePicker by mutableStateOf(false)
         private set
 
-    var dataOfBirth by mutableStateOf<LocalDateTime?>(null)
+    var startDate by mutableStateOf<LocalDateTime?>(null)
         private set
 
     fun updateShowDatePicker(isShowDatePicker: Boolean) {
@@ -118,15 +106,15 @@ class MembershipViewModel(
     }
 
     fun updateDateOfBirth(newDate: Long) {
-        dataOfBirth = millisToDate(millis = newDate)
+        startDate = millisToDate(millis = newDate)
     }
 
     fun getSelectDateAsString(): String? {
-        return dataOfBirth.toDDMMYYY()
+        return startDate.toDDMMYYY()
     }
 
     fun updatePromoCode(newPromoCode: String) {
-        promoCode = newPromoCode
+        if (newPromoCode.length <= 8) promoCode = newPromoCode
     }
 
     fun updateSelectedPlan(newPlan: PlanResponse) {
@@ -139,11 +127,38 @@ class MembershipViewModel(
 
     fun isContractOptionSelected(
         contractOption: ContractOption,
-    ):Boolean {
+    ): Boolean {
         return selectedContractOption?.id == contractOption.id
     }
 
     fun selectContractOption(contractOption: ContractOption) {
         selectedContractOption = contractOption
+    }
+
+    fun onCheckInfo() {
+        if (selectedPlan == null) {
+            _uiState.value = UiState.ShowSnackbar("Select your plan")
+        }else if (startDate == null) {
+            _uiState.value = UiState.ShowSnackbar("You need to select the day that you want to start on it")
+        }else if (promoCode.isNotBlank()) {
+            if (promoCode.length != 8) {
+                _uiState.value = UiState.ShowSnackbar("Promo code must be 8 digits")
+                return
+            }
+            viewModelScope.launch {
+                checkPromoCodeUseCase.invoke(promoCode)
+                    .onError {
+                        _uiState.value = UiState.ShowSnackbar(networkError(it))
+                    }.onSuccess {
+                        sendCompleteRequest()
+                    }
+            }
+        }else{
+            sendCompleteRequest()
+        }
+    }
+
+    fun sendCompleteRequest() {
+
     }
 }

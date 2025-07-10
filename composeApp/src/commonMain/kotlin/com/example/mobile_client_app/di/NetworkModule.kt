@@ -1,28 +1,42 @@
 package com.example.mobile_client_app.di
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.example.mobile_client_app.common.TokenManager
 import com.example.mobile_client_app.common.createHttpClientEngine
 import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
-import io.ktor.client.engine.*
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
+import saschpe.log4k.Log
 
 val networkModule = module {
-    single<HttpClient> { provideHttpClient(get()) }
+    single<HttpClient> { provideHttpClient(get(), get()) }
     single<HttpClientEngine> { createHttpClientEngine() }
+    single { TokenManager(get<DataStore<Preferences>>()) }
 }
 
-fun provideHttpClient(engine: HttpClientEngine): HttpClient {
+fun provideHttpClient(
+    engine: HttpClientEngine,
+    tokenManager: TokenManager,
+): HttpClient {
     return HttpClient(engine) {
+
         install(Logging) {
             logger = object : Logger {
                 override fun log(message: String) {
+                    if (message.contains("Authorization")) {
+                        // Redact token in logs
+                        Log.debug("HTTP ${message.replaceAfter("Bearer", "[REDACTED]")}")
+                    } else {
+                        Log.debug("HTTP $message")
+                    }
                     println("Ktor: $message")
                 }
             }
@@ -42,8 +56,18 @@ fun provideHttpClient(engine: HttpClientEngine): HttpClient {
             connectTimeoutMillis = 30_000
             socketTimeoutMillis = 30_000
         }
+        install(Auth) {
+            tokenManager.getToken()?.let {
+                bearer {
+                    loadTokens {
+                        BearerTokens(it, it)
+                    }
+                }
+            }
+        }
         defaultRequest {
-            // Add any default headers if needed
+            host = "10.55.107.17"
+            port = 8080
         }
     }
 }

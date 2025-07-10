@@ -18,16 +18,25 @@ import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.membership
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.ExperimentalTime
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun MembershipScreen(
     viewModel: MembershipViewModel = koinViewModel(),
     onNavigateToBackPage: () -> Unit,
     onContinue: () -> Unit,
     ) {
-    val datePickerState = rememberDatePickerState()
+
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = viewModel.today,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis in viewModel.today..viewModel.maxDate
+            }
+        }
+    )
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsState()
 
@@ -55,11 +64,13 @@ fun MembershipScreen(
                             .padding(innerPadding)
                             .verticalScroll(rememberScrollState()),
                         viewModel = viewModel,
-                        onContinue = onContinue,
+                        onContinue = {viewModel.onCheckInfo()},
                         datePickerState = datePickerState
                     )
                 }
             )
+
+            is UiState.ShowSnackbar -> TODO()
         }
     }
 }
