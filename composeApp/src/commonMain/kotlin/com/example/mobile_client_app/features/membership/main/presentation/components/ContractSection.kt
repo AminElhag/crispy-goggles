@@ -21,14 +21,14 @@ fun ContractSection(viewModel: MembershipViewModel) {
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
 
-        viewModel.contractOptions.forEach {option ->
+        /*viewModel.contractOptions.forEach {option ->
             ContractOption(
                 text = option.title,
                 subText = option.description,
                 isSelected = viewModel.isContractOptionSelected(option),
                 onSelect = { viewModel.selectContractOption(option) }
             )
-        }
+        }*/
 
     }
 }

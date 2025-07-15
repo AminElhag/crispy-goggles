@@ -9,11 +9,10 @@ import com.example.mobile_client_app.common.component.millisToDate
 import com.example.mobile_client_app.common.component.toDDMMYYY
 import com.example.mobile_client_app.features.membership.main.domain.model.ContractOption
 import com.example.mobile_client_app.features.membership.main.domain.model.MembershipResponse
-import com.example.mobile_client_app.features.membership.main.domain.model.PlanResponse
+import com.example.mobile_client_app.features.membership.main.domain.model.MembershipPlan
 import com.example.mobile_client_app.features.membership.main.domain.useCase.CheckPromoCodeUseCase
 import com.example.mobile_client_app.features.membership.main.domain.useCase.CheckoutInitUseCase
 import com.example.mobile_client_app.features.membership.main.domain.useCase.GetMembershipUseCase
-import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.checkInternetConnection
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess
@@ -57,9 +56,7 @@ class MembershipViewModel(
         private set
     var plans by mutableStateOf<MembershipResponse?>(null)
         private set
-    var selectedPlan by mutableStateOf<PlanResponse?>(null)
-        private set
-    var contractOptions: List<ContractOption> = emptyList()
+    var selectedPlan by mutableStateOf<MembershipPlan?>(null)
         private set
     var selectedContractOption by mutableStateOf<ContractOption?>(null)
         private set
@@ -116,12 +113,8 @@ class MembershipViewModel(
         if (newPromoCode.length <= 8) promoCode = newPromoCode
     }
 
-    fun updateSelectedPlan(newPlan: PlanResponse) {
+    fun updateSelectedPlan(newPlan: MembershipPlan) {
         selectedPlan = newPlan
-        contractOptions = newPlan.contractOptions
-        newPlan.contractOptions.forEach { contract ->
-            if (contract.default) selectedContractOption = contract
-        }
     }
 
     fun isContractOptionSelected(

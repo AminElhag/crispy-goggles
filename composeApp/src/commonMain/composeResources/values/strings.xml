@@ -54,6 +54,9 @@
     <string name="membership">Membership</string>
     <string name="try_again">Try Again</string>
     <string name="contract">Contract</string>
+    <string name="price_decimal">SDG</string>
+    <string name="choose_plan">Choose Plan</string>
+    <string name="selected">Selected</string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>

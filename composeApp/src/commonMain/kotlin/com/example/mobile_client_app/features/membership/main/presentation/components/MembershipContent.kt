@@ -104,9 +104,9 @@ fun MembershipContent(
                     }
                 }
 
-                if (!viewModel.contractOptions.isEmpty()) {
+                /*if (!viewModel.contractOptions.isEmpty()) {
                     ContractSection(viewModel)
-                }
+                }*/
 
                 // Start Date
                 DateSection(

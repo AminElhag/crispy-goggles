@@ -14,7 +14,7 @@ import com.example.mobile_client_app.features.membership.main.presentation.Membe
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = AppScreen.Login.route
+        startDestination = AppScreen.Membership.route
     ) {
         composable(AppScreen.Login.route) {
             LoginScreen(onNavigateToRegisteringScreen = {

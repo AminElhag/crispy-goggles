@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun RoundedCornerButton(
@@ -14,6 +15,7 @@ fun RoundedCornerButton(
     modifier: Modifier = Modifier,
     percentOfRoundedCornerShape: Int = 25,
     text: String,
+    textStyle: TextStyle = MaterialTheme.typography.titleLarge,
 ) {
     Button(
         onClick = onClick,
@@ -23,7 +25,7 @@ fun RoundedCornerButton(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.titleLarge,
+            style = textStyle,
         )
     }
 }
