@@ -9,7 +9,7 @@ import com.example.mobile_client_app.util.network.Result
 class CheckPromoCodeUseCase(
     private val membershipRepository: MembershipRepository
 ) {
-    suspend operator fun invoke(promoCode: String): Result<CheckPromoCodeResponse, NetworkError> {
-        return membershipRepository.checkPromoCode(promoCode)
+    suspend operator fun invoke(promoCode: String, paymentPlanID: Long): Result<CheckPromoCodeResponse, NetworkError> {
+        return membershipRepository.checkPromoCode(promoCode,paymentPlanID)
     }
 }

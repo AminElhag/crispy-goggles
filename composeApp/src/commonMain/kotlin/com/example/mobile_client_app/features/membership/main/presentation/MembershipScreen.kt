@@ -28,7 +28,7 @@ fun MembershipScreen(
         initialSelectedDateMillis = viewModel.today,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis in viewModel.today..viewModel.maxDate
+                return utcTimeMillis in viewModel.minDate..viewModel.maxDate
             }
         }
     )

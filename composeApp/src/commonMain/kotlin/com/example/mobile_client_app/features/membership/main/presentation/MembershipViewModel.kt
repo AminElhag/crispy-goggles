@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.common.component.millisToDate
 import com.example.mobile_client_app.common.component.toDDMMYYY
-import com.example.mobile_client_app.features.membership.main.domain.model.ContractOption
 import com.example.mobile_client_app.features.membership.main.domain.model.MembershipResponse
 import com.example.mobile_client_app.features.membership.main.domain.model.MembershipPlan
 import com.example.mobile_client_app.features.membership.main.domain.useCase.CheckPromoCodeUseCase
@@ -58,8 +57,7 @@ class MembershipViewModel(
         private set
     var selectedPlan by mutableStateOf<MembershipPlan?>(null)
         private set
-    var selectedContractOption by mutableStateOf<ContractOption?>(null)
-        private set
+
 
     @OptIn(ExperimentalTime::class)
     var today = Clock.System.now().toEpochMilliseconds()
@@ -67,6 +65,10 @@ class MembershipViewModel(
 
     @OptIn(ExperimentalTime::class)
     var maxDate = Clock.System.now().plus(duration = 7.days).toEpochMilliseconds()
+        private set
+
+    @OptIn(ExperimentalTime::class)
+    var minDate = Clock.System.now().minus(duration = 1.days).toEpochMilliseconds()
         private set
 
 
@@ -117,16 +119,6 @@ class MembershipViewModel(
         selectedPlan = newPlan
     }
 
-    fun isContractOptionSelected(
-        contractOption: ContractOption,
-    ): Boolean {
-        return selectedContractOption?.id == contractOption.id
-    }
-
-    fun selectContractOption(contractOption: ContractOption) {
-        selectedContractOption = contractOption
-    }
-
     fun onCheckInfo() {
         if (selectedPlan == null) {
             Log.debug { "Selected plan is null" }
@@ -138,8 +130,12 @@ class MembershipViewModel(
                 _events.value = MembershipEvent.ShowSnackbar("Promo code must be 8 digits")
             }else{
                 viewModelScope.launch {
-                    checkPromoCodeUseCase.invoke(promoCode).onSuccess { response ->
-                        sendCompleteRequest()
+                    checkPromoCodeUseCase.invoke(promoCode,selectedPlan!!.id).onSuccess { response ->
+                        if (response.isValid){
+                            sendCompleteRequest()
+                        }else{
+                            _events.value = MembershipEvent.ShowSnackbar(response.message)
+                        }
                     }.onError {error ->
                         _events.value = MembershipEvent.ShowSnackbar(error.displayMessage)
                     }

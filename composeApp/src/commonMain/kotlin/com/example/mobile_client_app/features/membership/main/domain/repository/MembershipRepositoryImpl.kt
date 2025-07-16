@@ -15,8 +15,8 @@ class MembershipRepositoryImpl(
         return membershipAPI.getMembership()
     }
 
-    override suspend fun checkPromoCode(promoCode: String): Result<CheckPromoCodeResponse, NetworkError> {
-        return membershipAPI.checkPromoCode(promoCode)
+    override suspend fun checkPromoCode(promoCode: String, paymentPlanID: Long): Result<CheckPromoCodeResponse, NetworkError> {
+        return membershipAPI.checkPromoCode(promoCode,paymentPlanID)
     }
 
     override suspend fun checkoutInit(

@@ -9,7 +9,7 @@ import kotlinx.datetime.LocalDate
 
 interface MembershipRepository {
     suspend fun getMembership(): Result<MembershipResponse,NetworkError>
-    suspend fun checkPromoCode(promoCode: String): Result<CheckPromoCodeResponse,NetworkError>
+    suspend fun checkPromoCode(promoCode: String, paymentPlanID: Long): Result<CheckPromoCodeResponse,NetworkError>
     suspend fun checkoutInit(
         membershipId: String,
         contractOptionId: String,

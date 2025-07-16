@@ -9,5 +9,5 @@ import com.example.mobile_client_app.util.network.Result
 interface MembershipAPI {
     suspend fun getMembership(): Result<MembershipResponse, NetworkError>
 
-    suspend fun checkPromoCode(promoCode: String): Result<CheckPromoCodeResponse, NetworkError>
+    suspend fun checkPromoCode(promoCode: String, paymentPlanID: Long): Result<CheckPromoCodeResponse, NetworkError>
 }
