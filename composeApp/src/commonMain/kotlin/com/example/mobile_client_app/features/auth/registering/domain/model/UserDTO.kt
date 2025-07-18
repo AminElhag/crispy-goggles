@@ -1,5 +1,6 @@
 package com.example.mobile_client_app.features.auth.registering.domain.model
 
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -13,7 +14,7 @@ data class UserDTO(
     val middleName: String,
     val lastName: String,
     val idNumber: String,
-    val dataOfBirth: LocalDateTime?,
+    val dataOfBirth: LocalDate?,
     val genderId: Int,
     val phoneNumber: String,
     val email: String,
@@ -30,7 +31,7 @@ data class UserDTO(
         middleName = middleName,
         lastName = lastName,
         idNumber = idNumber,
-        dataOfBirth = dataOfBirth?.toInstant(TimeZone.UTC)?.toLocalDateTime(TimeZone.UTC),
+        dataOfBirth = dataOfBirth,
         genderId = genderId,
         phoneNumber = phoneNumber,
         email = email,

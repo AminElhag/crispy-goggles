@@ -1,5 +1,6 @@
 package com.example.mobile_client_app.features.auth.registering.domain.model
 
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -15,7 +16,7 @@ data class UserRequest(
     @SerialName("id_number")
     val idNumber: String,
     @SerialName("date_of_birth")
-    val dataOfBirth: LocalDateTime?,
+    val dataOfBirth: LocalDate?,
     @SerialName("gender_id")
     val genderId: Int,
     @SerialName("phone_number")

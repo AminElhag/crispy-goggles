@@ -15,19 +15,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.mobile_client_app.common.component.DateSection
+import com.example.mobile_client_app.common.component.HtmlDialog
 import com.example.mobile_client_app.common.component.RoundedCornerButton
 import com.example.mobile_client_app.common.component.RoundedCornerWithoutBackgroundTextField
+import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.presentation.MembershipEvent
 import com.example.mobile_client_app.features.membership.main.presentation.MembershipViewModel
 import mobile_client_app.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.stringResource
+import saschpe.log4k.Log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MembershipContent(
     viewModel: MembershipViewModel,
     datePickerState: DatePickerState,
-    onContinue: () -> Unit
+    onContinue: () -> Unit,
+    onSuccess: (data: CheckoutInitResponse) -> Unit,
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -35,7 +39,7 @@ fun MembershipContent(
     LaunchedEffect(event) {
         when (event) {
             MembershipEvent.Reset -> {
-
+                Log.debug { "Reset membership event" }
             }
 
             is MembershipEvent.ShowSnackbar -> {
@@ -44,6 +48,10 @@ fun MembershipContent(
                     duration = SnackbarDuration.Short
                 )
                 viewModel.resetEvent()
+            }
+
+            is MembershipEvent.CheckoutInit -> {
+                onSuccess(event.data)
             }
         }
     }
@@ -140,6 +148,20 @@ fun MembershipContent(
                     title = stringResource(Res.string.promo_code),
                 )
 
+                if (viewModel.hasAgreement()) {
+                    viewModel.agreements.forEach { agreement ->
+                        TermsOfServiceCheckbox(
+                            checkedState = agreement.selected,
+                            title = agreement.title,
+                            openTermsOfService = {
+                                viewModel.showTermsDialog(agreement, true)
+                            },
+                            onCheckedChange = { viewModel.updateAgreementSelect(agreement.id) },
+                            required = agreement.required,
+                        )
+                    }
+                }
+
                 // Continue Button
                 Spacer(modifier = Modifier.weight(1f))
                 RoundedCornerButton(
@@ -156,4 +178,11 @@ fun MembershipContent(
             }
         }
     )
+    if (viewModel.showAgreementDialog) {
+        HtmlDialog(
+            title = viewModel.dialogAgreement?.title ?: "",
+            htmlContent = viewModel.dialogAgreement?.body ?: "",
+            onDismiss = { viewModel.showTermsDialog(null, false) },
+        )
+    }
 }

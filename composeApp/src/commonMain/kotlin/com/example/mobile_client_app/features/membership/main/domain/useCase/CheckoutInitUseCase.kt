@@ -1,5 +1,6 @@
 package com.example.mobile_client_app.features.membership.main.domain.useCase
 
+import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitRequest
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.domain.repository.MembershipRepository
 import com.example.mobile_client_app.util.network.NetworkError
@@ -10,13 +11,8 @@ class CheckoutInitUseCase(
     private val membershipRepository: MembershipRepository
 ) {
     suspend operator fun invoke(
-        membershipId: String,
-        contractOptionId: String,
-        startDate: LocalDate,
-        promoCode: String? = null,
+        request: CheckoutInitRequest,
     ): Result<CheckoutInitResponse, NetworkError> {
-        return membershipRepository.checkoutInit(
-            membershipId, contractOptionId, startDate, promoCode
-        )
+        return membershipRepository.checkoutInit(request)
     }
 }

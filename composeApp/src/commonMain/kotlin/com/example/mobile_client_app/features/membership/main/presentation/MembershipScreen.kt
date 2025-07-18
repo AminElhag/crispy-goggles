@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.mobile_client_app.common.component.FullScreenError
 import com.example.mobile_client_app.common.component.FullScreenLoading
+import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.presentation.components.MembershipContent
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.ExperimentalTime
@@ -21,7 +22,7 @@ import kotlin.time.ExperimentalTime
 fun MembershipScreen(
     viewModel: MembershipViewModel = koinViewModel(),
     onNavigateToBackPage: () -> Unit,
-    onContinue: () -> Unit,
+    onContinue: (data: CheckoutInitResponse) -> Unit,
 ) {
 
     val datePickerState = rememberDatePickerState(
@@ -45,7 +46,8 @@ fun MembershipScreen(
             is UiState.Success -> MembershipContent(
                 viewModel = viewModel,
                 onContinue = { viewModel.onCheckInfo() },
-                datePickerState = datePickerState
+                datePickerState = datePickerState,
+                onSuccess = { onContinue(it) },
             )
         }
     }

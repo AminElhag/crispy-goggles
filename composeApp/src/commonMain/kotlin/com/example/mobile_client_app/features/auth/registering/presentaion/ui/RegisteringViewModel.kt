@@ -10,26 +10,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.common.HearAboutUs
 import com.example.mobile_client_app.common.MedicalCondition
-import com.example.mobile_client_app.common.NetworkManager
 import com.example.mobile_client_app.common.TOKEN_KEY
 import com.example.mobile_client_app.common.component.millisToDate
-import com.example.mobile_client_app.common.component.toDDMMYYY
 import com.example.mobile_client_app.common.countryPicker.Country
 import com.example.mobile_client_app.features.auth.registering.domain.model.UserDTO
 import com.example.mobile_client_app.features.auth.registering.domain.usecase.CreateUserUseCase
-import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.checkInternetConnection
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess
 import com.example.mobile_client_app.util.phoneNumberVerification
 import com.example.mobile_client_app.util.validName
 import com.example.mobile_client_app.util.validNumber
-import com.mirego.konnectivity.NetworkState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalDate
 import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.select_any_medical_conditions
 import org.jetbrains.compose.resources.getString
@@ -56,7 +51,7 @@ class RegisteringViewModel(
         private set
     var idNumber by mutableStateOf("")
         private set
-    var dataOfBirth by mutableStateOf<LocalDateTime?>(null)
+    var dataOfBirth by mutableStateOf<LocalDate?>(null)
         private set
     var showDatePicker by mutableStateOf(false)
         private set
@@ -142,7 +137,7 @@ class RegisteringViewModel(
     }
 
     fun getSelectDateAsString(): String? {
-        return dataOfBirth.toDDMMYYY()
+        return dataOfBirth?.toString()
     }
 
     fun updateIsMale(isMale: Boolean) {
@@ -298,7 +293,7 @@ class RegisteringViewModel(
             _events.value = RegisteringEvent.ShowSnackbar("Internet is not connected")
         } else {
             isLoading = true
-            Log.debug { "Birth Date: ${dataOfBirth?.date}" }
+            Log.debug { "Birth Date: ${dataOfBirth}" }
             viewModelScope.launch {
                 createUserUseCase.invoke(
                     UserDTO(

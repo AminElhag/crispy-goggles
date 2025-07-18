@@ -24,5 +24,7 @@ data class MembershipPlan(
     @SerialName("limit_number_of_visits")
     val limitNumberOfVisits: Int?,
     @SerialName("can_be_renew")
-    val canBeRenew: Boolean
+    val canBeRenew: Boolean,
+    @SerialName("agreement")
+    val agreements: List<AgreementResponse>?,
 )

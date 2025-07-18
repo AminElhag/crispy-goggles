@@ -57,6 +57,11 @@
     <string name="price_decimal">SDG</string>
     <string name="choose_plan">Choose Plan</string>
     <string name="selected">Selected</string>
+    <string name="agreement">Agreement of this plan</string>
+    <string name="i_agree_to_the">I agree to the </string>
+    <string name="required"> (required)</string>
+    <string name="optional"> (optional)</string>
+    <string name="dismiss">Close</string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>

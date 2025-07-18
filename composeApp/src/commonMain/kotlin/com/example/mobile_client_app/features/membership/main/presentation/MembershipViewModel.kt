@@ -1,14 +1,18 @@
 package com.example.mobile_client_app.features.membership.main.presentation
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.common.component.millisToDate
 import com.example.mobile_client_app.common.component.toDDMMYYY
-import com.example.mobile_client_app.features.membership.main.domain.model.MembershipResponse
+import com.example.mobile_client_app.features.membership.main.domain.model.AgreementDto
+import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitRequest
+import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.domain.model.MembershipPlan
+import com.example.mobile_client_app.features.membership.main.domain.model.MembershipResponse
 import com.example.mobile_client_app.features.membership.main.domain.useCase.CheckPromoCodeUseCase
 import com.example.mobile_client_app.features.membership.main.domain.useCase.CheckoutInitUseCase
 import com.example.mobile_client_app.features.membership.main.domain.useCase.GetMembershipUseCase
@@ -20,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import saschpe.log4k.Log
 import kotlin.time.Clock
@@ -35,6 +40,7 @@ sealed class UiState<out T> {
 sealed class MembershipEvent {
     object Reset : MembershipEvent()
     data class ShowSnackbar(val message: String) : MembershipEvent()
+    data class CheckoutInit(val data:  CheckoutInitResponse) : MembershipEvent()
 }
 
 class MembershipViewModel(
@@ -58,6 +64,19 @@ class MembershipViewModel(
     var selectedPlan by mutableStateOf<MembershipPlan?>(null)
         private set
 
+    var agreements = mutableStateListOf<AgreementDto>()
+        private set
+
+    var dialogAgreement by mutableStateOf<AgreementDto?>(null)
+
+    var showDatePicker by mutableStateOf(false)
+        private set
+
+    var showAgreementDialog by mutableStateOf(false)
+        private set
+
+    var startDate by mutableStateOf<LocalDate?>(null)
+        private set
 
     @OptIn(ExperimentalTime::class)
     var today = Clock.System.now().toEpochMilliseconds()
@@ -84,7 +103,7 @@ class MembershipViewModel(
                 getMembershipUseCase.invoke().onSuccess { response ->
                     plans = response
                     _uiState.value = UiState.Success(response)
-                }.onError {error ->
+                }.onError { error ->
                     _uiState.value = UiState.Error(error.displayMessage)
                 }
             }
@@ -92,12 +111,6 @@ class MembershipViewModel(
             _uiState.value = UiState.Error("Failed to load data. Please check your connection.")
         }
     }
-
-    var showDatePicker by mutableStateOf(false)
-        private set
-
-    var startDate by mutableStateOf<LocalDateTime?>(null)
-        private set
 
     fun updateShowDatePicker(isShowDatePicker: Boolean) {
         showDatePicker = isShowDatePicker
@@ -108,7 +121,7 @@ class MembershipViewModel(
     }
 
     fun getSelectDateAsString(): String? {
-        return startDate.toDDMMYYY()
+        return startDate?.toString()
     }
 
     fun updatePromoCode(newPromoCode: String) {
@@ -117,40 +130,107 @@ class MembershipViewModel(
 
     fun updateSelectedPlan(newPlan: MembershipPlan) {
         selectedPlan = newPlan
+        agreements.clear()
+        agreements.addAll(newPlan.agreements?.map { it.toDto() } ?: emptyList())
     }
 
     fun onCheckInfo() {
-        if (selectedPlan == null) {
-            Log.debug { "Selected plan is null" }
-            _events.value = MembershipEvent.ShowSnackbar("Select your plan")
-        } else if (startDate == null) {
-            _events.value = MembershipEvent.ShowSnackbar("You need to select the day that you want to start on it")
-        } else if (promoCode.isNotBlank()) {
-            if (promoCode.length != 8) {
-                _events.value = MembershipEvent.ShowSnackbar("Promo code must be 8 digits")
-            }else{
-                viewModelScope.launch {
-                    checkPromoCodeUseCase.invoke(promoCode,selectedPlan!!.id).onSuccess { response ->
-                        if (response.isValid){
-                            sendCompleteRequest()
-                        }else{
-                            _events.value = MembershipEvent.ShowSnackbar(response.message)
-                        }
-                    }.onError {error ->
-                        _events.value = MembershipEvent.ShowSnackbar(error.displayMessage)
-                    }
-                }
-            }
-        } else {
-            sendCompleteRequest()
+        agreements.forEach {
+            Log.debug { "Agreement ${it.title} : ${it.required} : ${it.selected}" }
+        }
+        when {
+            selectedPlan == null -> handleMissingPlan()
+            startDate == null -> handleMissingStartDate()
+            promoCode.isNotBlank() -> validateAndApplyPromoCode()
+            !allAgreementIsAccepted() -> showSnackbar("Please accept all agreements.")
+            else -> sendCompleteRequest()
         }
     }
 
-    fun sendCompleteRequest() {
+    private fun handleMissingPlan() {
+        Log.debug { "Selected plan is null" }
+        _events.value = MembershipEvent.ShowSnackbar("Select your plan")
+    }
 
+    private fun handleMissingStartDate() {
+        _events.value = MembershipEvent.ShowSnackbar("You need to select the day that you want to start on it")
+    }
+
+    private fun validateAndApplyPromoCode() {
+        when {
+            promoCode.length != 8 -> {
+                _events.value = MembershipEvent.ShowSnackbar("Promo code must be 8 digits")
+            }
+
+            selectedPlan == null -> {
+                handleMissingPlan()
+            }
+
+            else -> {
+                viewModelScope.launch {
+                    checkPromoCodeUseCase.invoke(promoCode, selectedPlan!!.id).onSuccess { response ->
+                        if (response.isValid) sendCompleteRequest()
+                        else showSnackbar(response.message)
+                    }.onError { error ->
+                        showSnackbar(error.displayMessage)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showSnackbar(message: String) {
+        _events.value = MembershipEvent.ShowSnackbar(message)
+    }
+
+    fun sendCompleteRequest() {
+        viewModelScope.launch {
+            checkoutInitUseCase.invoke(
+                CheckoutInitRequest(
+                    membershipId = selectedPlan!!.id,
+                    startDate = startDate!!,
+                    promoCode = promoCode,
+                    acceptAgreementsIds = agreements.filter { it.selected }.mapTo(mutableSetOf()) { it.id },
+                )
+                ).onSuccess {response ->
+                    _events.value = MembershipEvent.CheckoutInit(response)
+            }.onError { error ->
+                showSnackbar(error.displayMessage)
+            }
+        }
     }
 
     fun resetEvent() {
-
+        _events.value = MembershipEvent.Reset
     }
+
+    fun hasAgreement(): Boolean {
+        return selectedPlan != null && selectedPlan!!.agreements != null && agreements.isNotEmpty()
+    }
+
+    fun updateAgreementSelect(agreementId: Long) {
+        val index = agreements.indexOfFirst { it.id == agreementId }
+        if (index == -1) {
+            Log.warn("Agreement $agreementId not found in list")
+            return
+        }
+
+        agreements[index] = agreements[index].copy(
+            selected = !agreements[index].selected
+        )
+    }
+
+    fun showTermsDialog(agreement: AgreementDto?, show: Boolean) {
+        dialogAgreement = agreement
+        showAgreementDialog = show
+    }
+
+
+    /*
+    * required && selected  → OK
+    * required && !selected → FAIL
+    * !required             → OK (regardless of selected)
+    */
+    fun allAgreementIsAccepted(): Boolean =
+        agreements.all { !it.required || it.selected }
 }

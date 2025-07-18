@@ -5,14 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CheckoutInitResponse(
-    @SerialName("payment_session_id")
-    val paymentSessionId: String,
-    @SerialName("next_action")
-    val nextAction: String,
-    @SerialName("payment_url")
-    val paymentUrl: String,
-    @SerialName("amount_due")
-    val amountDue: Double,
-    @SerialName("currency")
-    val currency: String,
+    @SerialName("total_amount_without_tax") val totalAmountWithoutTax: String,
+    @SerialName("total_tax") val totalTax: String,
+    @SerialName("total_amount") val totalAmount: String,
+    @SerialName("contract_id") val contractId: Long
 )
