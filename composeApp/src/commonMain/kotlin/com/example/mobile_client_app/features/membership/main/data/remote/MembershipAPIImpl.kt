@@ -10,7 +10,6 @@ import com.example.mobile_client_app.util.network.toException
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import kotlinx.datetime.LocalDate
 
 class MembershipAPIImpl(
     private val httpClient: HttpClient
@@ -62,7 +61,10 @@ class MembershipAPIImpl(
 
     }
 
-    override suspend fun checkPromoCode(promoCode: String, paymentPlanID: Long): Result<CheckPromoCodeResponse, NetworkError> {
+    override suspend fun checkPromoCode(
+        promoCode: String,
+        paymentPlanID: Long
+    ): Result<CheckPromoCodeResponse, NetworkError> {
         val response = try {
             httpClient.get("/api/v1/discounts/validate") {
                 parameter("code", promoCode)

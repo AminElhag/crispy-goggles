@@ -65,7 +65,7 @@ fun provideHttpClient(
             }
         }
         defaultRequest {
-            host = "10.55.107.17"
+            host = "10.247.59.17"
             port = 8080
             contentType(ContentType.Application.Json)
         }

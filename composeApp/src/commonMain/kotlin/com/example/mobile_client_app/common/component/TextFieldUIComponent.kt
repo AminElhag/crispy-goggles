@@ -1,12 +1,7 @@
 package com.example.mobile_client_app.common.component
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -19,11 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import mobile_client_app.composeapp.generated.resources.Res
-import mobile_client_app.composeapp.generated.resources.password
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun RoundedCornerWithoutBackgroundTextField(
@@ -36,19 +29,23 @@ fun RoundedCornerWithoutBackgroundTextField(
     hasOutTitle: Boolean = false,
     title: String = "",
 ) {
-    Column {
-        if (title.isNotEmpty()) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-            )
-        }
+    Column(modifier = modifier) {
+
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.heightIn(min = 24.dp)
+        )
+
         OutlinedTextField(
             enabled = enabled,
             value = value,
-            onValueChange = { onValueChange(it) },
+            onValueChange = {
+                onValueChange(it)
+            },
             placeholder = { Text(placeholder) },
-            modifier = modifier,
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(25),
             keyboardOptions = keyboardOptions,
             maxLines = 1,
@@ -119,4 +116,43 @@ fun RoundedCornerPasswordTextField(
             unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
         ),
     )
+}
+
+@Composable
+fun RoundedCornerWithoutBackgroundTextField(
+    enabled: Boolean = true,
+    value: TextFieldValue, // Changed from String to TextFieldValue
+    onValueChange: (TextFieldValue) -> Unit, // Changed parameter type
+    placeholder: String,
+    modifier: Modifier = Modifier,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    hasOutTitle: Boolean = false,
+    title: String = "",
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.heightIn(min = 24.dp)
+        )
+
+        OutlinedTextField(
+            enabled = enabled,
+            value = value,
+            onValueChange = {
+                onValueChange(it)
+            },
+            placeholder = { Text(placeholder) },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(25),
+            keyboardOptions = keyboardOptions,
+            maxLines = 1,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+            ),
+        )
+    }
 }

@@ -62,6 +62,11 @@
     <string name="required"> (required)</string>
     <string name="optional"> (optional)</string>
     <string name="dismiss">Close</string>
+    <string name="payment">Payment</string>
+    <string name="complete_signup">Complete Signup</string>
+    <string name="retry">Retry</string>
+    <string name="generic_error">Unknow Error</string>
+    <string name="error">Error</string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>

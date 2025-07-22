@@ -8,7 +8,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mobile_client_app.features.auth.login.presentation.ui.LoginScreen
 import com.example.mobile_client_app.features.auth.registering.presentaion.ui.AdditionInformationScreen
 import com.example.mobile_client_app.features.auth.registering.presentaion.ui.RegisteringScreen
+import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.presentation.MembershipScreen
+import com.example.mobile_client_app.features.membership.payment.presentation.PaymentScreen
+import kotlinx.serialization.json.Json
 
 @Composable
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
@@ -21,7 +24,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                 navController.navigate(AppScreen.Registering.route)
             })
         }
-        composable(AppScreen.Registering.route){
+        composable(AppScreen.Registering.route) {
             RegisteringScreen(
                 onNavigateToBackPage = {
                     navController.popBackStack()
@@ -45,10 +48,27 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             MembershipScreen(
                 onNavigateToBackPage = {
 
-                }, onContinue = {
-
+                },
+                onContinue = { checkoutInitResponse ->
+                    val json = Json.encodeToString(checkoutInitResponse)
+                    /*navController.navigate(AppScreen.Payments.route + "/${json.encodeToRoute()}")*/
+                    navController.navigate(AppScreen.Payments.route + "/$json")
                 }
             )
+        }
+        composable(
+            AppScreen.Payments.route+"/{json}",
+        ) { backStackEntry ->
+            val response = backStackEntry.savedStateHandle.get<String>("json")
+
+            if (response != null) {
+                val checkoutResponse = Json.decodeFromString<CheckoutInitResponse>(response)
+                PaymentScreen(
+                    data = checkoutResponse,
+                ) {
+
+                }
+            }
         }
     }
 }
