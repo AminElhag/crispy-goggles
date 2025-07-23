@@ -1,12 +1,10 @@
 package com.example.mobile_client_app.util.network
 
-import io.ktor.client.plugins.ClientRequestException
-import io.ktor.client.plugins.HttpRequestTimeoutException
-import io.ktor.client.plugins.ServerResponseException
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.io.IOException
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -19,7 +17,7 @@ sealed class NetworkError(
     // Client errors (4xx)
     object Unauthorized : NetworkError("Session expired", 401)
     object Forbidden : NetworkError("Access denied", 403)
-    object NotFound : NetworkError("Resource not found", 404)
+    data class NotFound(val serverMessage: String?) : NetworkError(serverMessage ?: "Resource not found", 404)
     object Conflict : NetworkError("Data conflict", 409)
     object PayloadTooLarge : NetworkError("File too large", 413)
     object TooManyRequests : NetworkError("Too many attempts", 429)
@@ -48,7 +46,7 @@ sealed class NetworkError(
 suspend fun HttpResponse.toException(): NetworkError {
     val status = this.status
     val body = try {
-        this.bodyAsText()
+        this.body<ErrorResponse>().message
     } catch (e: Exception) {
         "Unable to read response body: ${e.message}"
     }
@@ -63,11 +61,11 @@ suspend fun HttpResponse.toException(): NetworkError {
     }
 }
 
-private fun handleClientError(status: HttpStatusCode, body: String): NetworkError {
+private fun handleClientError(status: HttpStatusCode, body: String?): NetworkError {
     return when (status) {
         HttpStatusCode.Unauthorized -> NetworkError.Unauthorized
         HttpStatusCode.Forbidden -> NetworkError.Forbidden
-        HttpStatusCode.NotFound -> NetworkError.NotFound
+        HttpStatusCode.NotFound -> NetworkError.NotFound(body)
         HttpStatusCode.Conflict -> NetworkError.Conflict
         HttpStatusCode.PayloadTooLarge -> NetworkError.PayloadTooLarge
         HttpStatusCode.TooManyRequests -> NetworkError.TooManyRequests
@@ -75,7 +73,7 @@ private fun handleClientError(status: HttpStatusCode, body: String): NetworkErro
     }
 }
 
-private fun handleServerError(status: HttpStatusCode, body: String): NetworkError {
+private fun handleServerError(status: HttpStatusCode, body: String?): NetworkError {
     return when (status) {
         HttpStatusCode.InternalServerError -> NetworkError.InternalServerError
         HttpStatusCode.BadGateway -> NetworkError.BadGateway
@@ -87,10 +85,10 @@ private fun handleServerError(status: HttpStatusCode, body: String): NetworkErro
     }
 }
 
-private fun parseCustomError(status: HttpStatusCode, body: String): NetworkError {
+private fun parseCustomError(status: HttpStatusCode, body: String?): NetworkError {
     return try {
         // Parse backend-specific error format
-        val errorResponse = Json.decodeFromString<ErrorResponse>(body)
+        val errorResponse = Json.decodeFromString<ErrorResponse>(body ?: "")
         NetworkError.CustomError(
             errorResponse.message ?: "Error ${status.value}",
             status.value
@@ -98,7 +96,7 @@ private fun parseCustomError(status: HttpStatusCode, body: String): NetworkError
     } catch (e: Exception) {
         // Fallback if parsing fails
         NetworkError.CustomError(
-            "Error ${status.value}: ${body.take(200)}",
+            "Error ${status.value}: ${body?.take(200)}",
             status.value
         )
     }
@@ -107,9 +105,10 @@ private fun parseCustomError(status: HttpStatusCode, body: String): NetworkError
 // Backend error response format
 @Serializable
 data class ErrorResponse(
-    val code: Int? = null,
+    val status: Int? = null,
     val message: String? = null,
-    @SerialName("error_code") val errorCode: String? = null
+    val error: String,
+    val timestamp: String,
 )
 
 suspend fun convertToNetworkError(e: Exception): NetworkError {

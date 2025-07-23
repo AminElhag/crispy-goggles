@@ -6,9 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mobile_client_app.features.auth.login.domain.usecase.LoginUseCase
 import com.example.mobile_client_app.common.countryPicker.Country
-import com.example.mobile_client_app.util.network.NetworkError
+import com.example.mobile_client_app.features.auth.login.domain.usecase.LoginUseCase
 import com.example.mobile_client_app.util.network.checkInternetConnection
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess

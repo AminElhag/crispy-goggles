@@ -15,9 +15,8 @@ class LoginAPIImpl(private val httpClient: HttpClient) : LoginAPI {
         password: String
     ): Result<LoginResponse, NetworkError> {
         val response = try {
-            httpClient.post("/login") {
+            httpClient.post("/api/v1/client/login") {
                 setBody(mapOf("username" to emailOrPhone, "password" to password))
-                contentType(ContentType.Application.Json)
             }
         } catch (e: NetworkError) {
             return Result.Error(e)
@@ -32,12 +31,6 @@ class LoginAPIImpl(private val httpClient: HttpClient) : LoginAPI {
 
             else -> Result.Error(response.toException())
 
-            /*401 -> Result.Error(NetworkError.UNAUTHORIZED)
-            409 -> Result.Error(NetworkError.CONFLICT)
-            408 -> Result.Error(NetworkError.REQUEST_TIMEOUT)
-            413 -> Result.Error(NetworkError.PAYLOAD_TOO_LARGE)
-            in 500..599 -> Result.Error(NetworkError.SERVER_ERROR)
-            else -> Result.Error(NetworkError.UNKNOWN)*/
         }
     }
 }

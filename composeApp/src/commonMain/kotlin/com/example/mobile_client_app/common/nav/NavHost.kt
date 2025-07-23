@@ -11,13 +11,14 @@ import com.example.mobile_client_app.features.auth.registering.presentaion.ui.Re
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.presentation.MembershipScreen
 import com.example.mobile_client_app.features.membership.payment.presentation.PaymentScreen
+import com.example.mobile_client_app.features.onboarding.main.presntation.OnboardingMainScreen
 import kotlinx.serialization.json.Json
 
 @Composable
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = AppScreen.Membership.route
+        startDestination = AppScreen.Login.route
     ) {
         composable(AppScreen.Login.route) {
             LoginScreen(onNavigateToRegisteringScreen = {
@@ -57,7 +58,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             )
         }
         composable(
-            AppScreen.Payments.route+"/{json}",
+            AppScreen.Payments.route + "/{json}",
         ) { backStackEntry ->
             val response = backStackEntry.savedStateHandle.get<String>("json")
 
@@ -66,9 +67,12 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                 PaymentScreen(
                     data = checkoutResponse,
                 ) {
-
+                    navController.navigate(AppScreen.OnBoarding.route)
                 }
             }
+        }
+        composable(AppScreen.OnBoarding.route) {
+            OnboardingMainScreen()
         }
     }
 }
