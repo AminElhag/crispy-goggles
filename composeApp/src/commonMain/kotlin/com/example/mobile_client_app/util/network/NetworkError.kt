@@ -15,21 +15,22 @@ sealed class NetworkError(
     val originalException: Throwable? = null
 ) : Exception(displayMessage, originalException) {
     // Client errors (4xx)
-    object Unauthorized : NetworkError("Session expired", 401)
-    object Forbidden : NetworkError("Access denied", 403)
+    data class Unauthorized(val serverMessage: String?) : NetworkError(serverMessage ?: "Session expired", 401)
+    data class Forbidden(val serverMessage: String?) : NetworkError(serverMessage ?: "Access denied", 403)
     data class NotFound(val serverMessage: String?) : NetworkError(serverMessage ?: "Resource not found", 404)
-    object Conflict : NetworkError("Data conflict", 409)
-    object PayloadTooLarge : NetworkError("File too large", 413)
-    object TooManyRequests : NetworkError("Too many attempts", 429)
+    data class Conflict(val serverMessage: String?) : NetworkError(serverMessage ?: "Data conflict", 409)
+    data class PayloadTooLarge(val serverMessage: String?) : NetworkError(serverMessage ?: "File too large", 413)
+    data class TooManyRequests(val serverMessage: String?) : NetworkError(serverMessage ?: "Too many attempts", 429)
 
     // Server errors (5xx)
-    object InternalServerError : NetworkError("Server error", 500)
-    object BadGateway : NetworkError("Bad gateway", 502)
-    object ServiceUnavailable : NetworkError("Service unavailable", 503)
+    data class InternalServerError(val serverMessage: String?) : NetworkError(serverMessage ?: "Server error", 500)
+    data class BadGateway(val serverMessage: String?) : NetworkError(serverMessage ?: "Bad gateway", 502)
+    data class ServiceUnavailable(val serverMessage: String?) :
+        NetworkError(serverMessage ?: "Service unavailable", 503)
 
     // Network issues
-    object RequestTimeout : NetworkError("Request timed out")
-    object NoInternet : NetworkError("No internet connection")
+    data class RequestTimeout(val serverMessage: String?) : NetworkError(serverMessage ?: "Request timed out")
+    data class NoInternet(val serverMessage: String?) : NetworkError(serverMessage ?: "No internet connection")
 
     // Custom/unknown errors
     class CustomError(
@@ -63,21 +64,21 @@ suspend fun HttpResponse.toException(): NetworkError {
 
 private fun handleClientError(status: HttpStatusCode, body: String?): NetworkError {
     return when (status) {
-        HttpStatusCode.Unauthorized -> NetworkError.Unauthorized
-        HttpStatusCode.Forbidden -> NetworkError.Forbidden
+        HttpStatusCode.Unauthorized -> NetworkError.Unauthorized(body)
+        HttpStatusCode.Forbidden -> NetworkError.Forbidden(body)
         HttpStatusCode.NotFound -> NetworkError.NotFound(body)
-        HttpStatusCode.Conflict -> NetworkError.Conflict
-        HttpStatusCode.PayloadTooLarge -> NetworkError.PayloadTooLarge
-        HttpStatusCode.TooManyRequests -> NetworkError.TooManyRequests
+        HttpStatusCode.Conflict -> NetworkError.Conflict(body)
+        HttpStatusCode.PayloadTooLarge -> NetworkError.PayloadTooLarge(body)
+        HttpStatusCode.TooManyRequests -> NetworkError.TooManyRequests(body)
         else -> parseCustomError(status, body)
     }
 }
 
 private fun handleServerError(status: HttpStatusCode, body: String?): NetworkError {
     return when (status) {
-        HttpStatusCode.InternalServerError -> NetworkError.InternalServerError
-        HttpStatusCode.BadGateway -> NetworkError.BadGateway
-        HttpStatusCode.ServiceUnavailable -> NetworkError.ServiceUnavailable
+        HttpStatusCode.InternalServerError -> NetworkError.InternalServerError(body)
+        HttpStatusCode.BadGateway -> NetworkError.BadGateway(body)
+        HttpStatusCode.ServiceUnavailable -> NetworkError.ServiceUnavailable(body)
         else -> NetworkError.CustomError(
             "Server error ${status.value}: $body",
             status.value
@@ -116,8 +117,8 @@ suspend fun convertToNetworkError(e: Exception): NetworkError {
         is NetworkError -> e // Already our custom error
         is ClientRequestException -> e.response.toException()
         is ServerResponseException -> e.response.toException()
-        is HttpRequestTimeoutException -> NetworkError.RequestTimeout
-        is IOException -> NetworkError.NoInternet
+        is HttpRequestTimeoutException -> NetworkError.RequestTimeout(null)
+        is IOException -> NetworkError.NoInternet(null)
         is SerializationException -> NetworkError.CustomError("Data parsing error")
         else -> NetworkError.UnknownError(e)
     }

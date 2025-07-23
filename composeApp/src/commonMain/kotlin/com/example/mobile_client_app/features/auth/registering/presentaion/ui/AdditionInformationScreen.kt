@@ -175,8 +175,7 @@ fun AdditionInformationScreen(
                     onValueChange = { viewModel.updateOccupation(it) },
                     placeholder = stringResource(Res.string.occupation),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
+                        .fillMaxWidth(),
                 )
 
                 Box(
