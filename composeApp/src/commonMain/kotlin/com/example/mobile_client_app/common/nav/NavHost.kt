@@ -11,19 +11,24 @@ import com.example.mobile_client_app.features.auth.registering.presentaion.ui.Re
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.presentation.MembershipScreen
 import com.example.mobile_client_app.features.membership.payment.presentation.PaymentScreen
-import com.example.mobile_client_app.features.onboarding.main.presntation.OnboardingMainScreen
+import com.example.mobile_client_app.features.onboarding.OnBoardingScreen
 import kotlinx.serialization.json.Json
 
 @Composable
 fun AppNavHost(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = AppScreen.Login.route
+        startDestination = AppScreen.OnBoarding.route
     ) {
         composable(AppScreen.Login.route) {
-            LoginScreen(onNavigateToRegisteringScreen = {
-                navController.navigate(AppScreen.Registering.route)
-            })
+            LoginScreen(
+                onNavigateToRegisteringScreen = {
+                    navController.navigate(AppScreen.Registering.route)
+                },
+                onLoginComplete = {
+                    navController.navigate(AppScreen.OnBoarding.route)
+                }
+            )
         }
         composable(AppScreen.Registering.route) {
             RegisteringScreen(
@@ -61,7 +66,6 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             AppScreen.Payments.route + "/{json}",
         ) { backStackEntry ->
             val response = backStackEntry.savedStateHandle.get<String>("json")
-
             if (response != null) {
                 val checkoutResponse = Json.decodeFromString<CheckoutInitResponse>(response)
                 PaymentScreen(
@@ -72,7 +76,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             }
         }
         composable(AppScreen.OnBoarding.route) {
-            OnboardingMainScreen()
+            OnBoardingScreen()
         }
     }
 }

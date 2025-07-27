@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -51,7 +50,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
             implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.core)
             implementation(libs.kotlinx.coroutines.core)
             api(libs.koin.core)
             implementation(libs.koin.compose)
@@ -65,6 +63,8 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.datastore)
             implementation(libs.datastore.preferences)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

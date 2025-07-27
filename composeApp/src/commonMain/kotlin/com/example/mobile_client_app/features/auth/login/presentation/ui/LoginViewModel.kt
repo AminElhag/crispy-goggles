@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 sealed interface LoginEvent {
     object Reset : LoginEvent
     data class ShowSnackbar(val message: String) : LoginEvent
+    object Login : LoginEvent
 }
 
 class LoginViewModel(
@@ -59,7 +60,7 @@ class LoginViewModel(
                 loginUseCase.invoke(emailOrPhone, password)
                     .onSuccess {
                         isLoading = false
-                        _events.value = LoginEvent.ShowSnackbar(message = "Successfully logged in")
+                        _events.value = LoginEvent.Reset
                     }
                     .onError {
                         isLoading = false

@@ -17,6 +17,7 @@ import com.example.mobile_client_app.di.dataStoreModule
 import com.example.mobile_client_app.di.networkModule
 import com.example.mobile_client_app.features.membership.main.di.membershipModule
 import com.example.mobile_client_app.features.membership.payment.di.paymentModule
+import com.example.mobile_client_app.features.onboarding.di.onBoardingModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -36,7 +37,8 @@ class MainActivity : ComponentActivity() {
                     registeringModule,
                     dataStoreModule,
                     membershipModule,
-                    paymentModule
+                    paymentModule,
+                    onBoardingModule,
                 )
             )
         }

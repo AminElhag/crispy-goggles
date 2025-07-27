@@ -39,7 +39,6 @@ fun provideHttpClient(
                     } else {
                         Log.debug("HTTP $message")
                     }
-                    println("Ktor: $message")
                 }
             }
             level = LogLevel.ALL

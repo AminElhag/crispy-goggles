@@ -4,6 +4,7 @@ import com.example.mobile_client_app.features.auth.login.di.loginModule
 import com.example.mobile_client_app.features.auth.registering.di.registeringModule
 import com.example.mobile_client_app.features.membership.main.di.membershipModule
 import com.example.mobile_client_app.features.membership.payment.di.paymentModule
+import com.example.mobile_client_app.features.onboarding.di.onBoardingModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -11,6 +12,12 @@ fun initKoin(config: KoinAppDeclaration? = null) =
     startKoin {
         config?.invoke(this)
         modules(
-            networkModule, loginModule, registeringModule, dataStoreModule, membershipModule, paymentModule
+            networkModule,
+            loginModule,
+            registeringModule,
+            dataStoreModule,
+            membershipModule,
+            paymentModule,
+            onBoardingModule,
         )
     }

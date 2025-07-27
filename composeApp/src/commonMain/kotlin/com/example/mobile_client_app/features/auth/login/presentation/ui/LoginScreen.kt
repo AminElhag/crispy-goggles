@@ -32,7 +32,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
-    onNavigateToRegisteringScreen: () -> Unit
+    onNavigateToRegisteringScreen: () -> Unit,
+    onLoginComplete: () -> Unit,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -54,6 +55,10 @@ fun LoginScreen(
 
                 LoginEvent.Reset -> {
 
+                }
+
+                LoginEvent.Login -> {
+                    onLoginComplete()
                 }
             }
         }
