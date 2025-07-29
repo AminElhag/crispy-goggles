@@ -11,6 +11,7 @@ import com.example.mobile_client_app.features.auth.registering.presentaion.ui.Re
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.presentation.MembershipScreen
 import com.example.mobile_client_app.features.membership.payment.presentation.PaymentScreen
+import com.example.mobile_client_app.features.notifications.presntation.list.NotificationsListScreen
 import com.example.mobile_client_app.features.onboarding.OnBoardingScreen
 import kotlinx.serialization.json.Json
 
@@ -76,7 +77,17 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             }
         }
         composable(AppScreen.OnBoarding.route) {
-            OnBoardingScreen()
+            OnBoardingScreen() {
+                navController.navigate(AppScreen.Notification.route)
+            }
         }
+        composable(AppScreen.Notification.route) {
+            NotificationsListScreen(
+                onBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
     }
 }

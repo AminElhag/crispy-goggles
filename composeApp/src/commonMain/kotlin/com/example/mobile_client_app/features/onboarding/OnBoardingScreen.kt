@@ -23,7 +23,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 
 @Composable
 fun OnBoardingScreen(
-
+    onNotificationsClick: () -> Unit,
 ) {
     var selectedScreen by remember { mutableStateOf(Screen.Home.route) }
 
@@ -71,7 +71,7 @@ fun OnBoardingScreen(
                 Screen.Home.route -> {
                     HomeScreen(
                         onNotificationsClick = {
-
+                            onNotificationsClick()
                         },
                         onBannerClick = {
 
