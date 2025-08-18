@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,7 +26,7 @@ fun NotificationCard(notification: GetNotificationResponse) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp
@@ -43,7 +44,6 @@ fun NotificationCard(notification: GetNotificationResponse) {
                     text = notification.title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(4f)
@@ -51,7 +51,6 @@ fun NotificationCard(notification: GetNotificationResponse) {
                 Text(
                     text = notification.time,
                     fontSize = 12.sp,
-                    color = Color.Gray,
                     modifier = Modifier.padding(start = 8.dp).weight(1f),
                     maxLines = 1,
                 )
@@ -60,7 +59,6 @@ fun NotificationCard(notification: GetNotificationResponse) {
             Text(
                 text = notification.description,
                 fontSize = 14.sp,
-                color = Color.Gray,
                 lineHeight = 20.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis

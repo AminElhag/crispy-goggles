@@ -70,7 +70,9 @@ fun HomeScreen(
                         }
                     ) },
                 )
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.padding(top = 16.dp),
+                ) {
                     items(
                         viewModel.upcomingClasses.value
                     ) { it ->

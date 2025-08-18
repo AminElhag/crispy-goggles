@@ -25,7 +25,8 @@ fun ClassCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClassClick() },
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        shape = RoundedCornerShape(0.dp),
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -38,12 +39,10 @@ fun ClassCard(
                     text = fitnessClass.title,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black
                 )
                 Text(
                     text = "Instructor: ${fitnessClass.instructor}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -59,8 +58,8 @@ fun ClassCard(
                 ) {
                     Text(
                         text = "View",
-                        color = Color.Black,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                 }
             }
