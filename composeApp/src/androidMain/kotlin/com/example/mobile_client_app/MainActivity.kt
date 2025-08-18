@@ -15,6 +15,7 @@ import com.example.mobile_client_app.common.DATA_STORE_FILE_NAME
 import com.example.mobile_client_app.common.createDataStore
 import com.example.mobile_client_app.di.dataStoreModule
 import com.example.mobile_client_app.di.networkModule
+import com.example.mobile_client_app.features.auth.profile.profileModule
 import com.example.mobile_client_app.features.membership.main.di.membershipModule
 import com.example.mobile_client_app.features.membership.payment.di.paymentModule
 import com.example.mobile_client_app.features.notifications.di.notificationsModule
@@ -41,6 +42,7 @@ class MainActivity : ComponentActivity() {
                     paymentModule,
                     onBoardingModule,
                     notificationsModule,
+                    profileModule,
                 )
             )
         }

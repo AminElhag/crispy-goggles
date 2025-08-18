@@ -68,6 +68,17 @@
     <string name="generic_error">Unknow Error</string>
     <string name="error">Error</string>
     <string name="notifications">Notifications</string>
+    <string name="profile">Profile</string>
+    <string name="active_membership">Active Membership</string>
+    <string name="inactive_membership">InActive Membership</string>
+    <string name="cancelled_membership">Cancelled Membership</string>
+    <string name="blocked_membership">Blocked Membership</string>
+    <string name="deleted_membership">Deleted Membership</string>
+    <string name="unknown_membership">Unknown Membership</string>
+    <string name="current_status">Current Status</string>
+    <string name="freeze_membership">Freeze Membership</string>
+    <string name="body_health_status">Body &amp; Health Status</string>
+    <string name="logout">Logout</string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>

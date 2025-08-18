@@ -3,6 +3,7 @@ package com.example.mobile_client_app.features.onboarding
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.mobile_client_app.features.auth.profile.presentation.ProfileScreen
 import com.example.mobile_client_app.features.onboarding.home.presntation.HomeScreen
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
@@ -24,6 +26,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 @Composable
 fun OnBoardingScreen(
     onNotificationsClick: () -> Unit,
+    onLogoutTrigger: () -> Unit,
 ) {
     var selectedScreen by remember { mutableStateOf(Screen.Home.route) }
 
@@ -43,10 +46,9 @@ fun OnBoardingScreen(
                             icon = {
                                 Icon(
                                     screen.icon, contentDescription = screen.title,
-                                    tint = if (selectedScreen == screen.route) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.surfaceDim,
+                                    tint = if (selectedScreen == screen.route) MaterialTheme.colorScheme.onBackground else MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
                             },
-                            /*label = { Text(screen.title) },*/
                             selected = selectedScreen == screen.route,
                             onClick = { selectedScreen = screen.route },
                         )
@@ -56,12 +58,14 @@ fun OnBoardingScreen(
         }
     ) { paddingValues ->
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().padding(bottom = paddingValues.calculateBottomPadding()),
             contentAlignment = Alignment.Center
         ) {
             when (selectedScreen) {
                 Screen.Profile.route -> {
-                    Text(text = "Profile", style = MaterialTheme.typography.headlineLarge)
+                    ProfileScreen(
+                        onLogoutTrigger = onLogoutTrigger,
+                    )
                 }
 
                 Screen.QrCode.route -> {

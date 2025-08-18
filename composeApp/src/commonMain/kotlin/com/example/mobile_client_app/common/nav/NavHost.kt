@@ -77,9 +77,16 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             }
         }
         composable(AppScreen.OnBoarding.route) {
-            OnBoardingScreen() {
-                navController.navigate(AppScreen.Notification.route)
-            }
+            OnBoardingScreen(
+                onNotificationsClick = {navController.navigate(AppScreen.Notification.route)},
+                onLogoutTrigger = {
+                    navController.navigate(AppScreen.Login.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
         composable(AppScreen.Notification.route) {
             NotificationsListScreen(
