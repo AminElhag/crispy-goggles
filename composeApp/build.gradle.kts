@@ -65,6 +65,7 @@ kotlin {
             implementation(libs.datastore.preferences)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
+            implementation(libs.qrcode)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

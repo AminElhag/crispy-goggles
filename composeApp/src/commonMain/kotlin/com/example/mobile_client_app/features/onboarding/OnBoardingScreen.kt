@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.mobile_client_app.features.auth.profile.presentation.ProfileScreen
 import com.example.mobile_client_app.features.onboarding.home.presntation.HomeScreen
+import com.example.mobile_client_app.features.onboarding.qrCode.presntation.QrCodeScreen
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Home : Screen("home", "Home", Icons.Default.Home)
@@ -69,7 +70,7 @@ fun OnBoardingScreen(
                 }
 
                 Screen.QrCode.route -> {
-                    Text(text = "Qr Code", style = MaterialTheme.typography.bodyLarge)
+                    QrCodeScreen()
                 }
 
                 Screen.Home.route -> {

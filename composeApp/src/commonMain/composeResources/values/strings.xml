@@ -79,6 +79,9 @@
     <string name="freeze_membership">Freeze Membership</string>
     <string name="body_health_status">Body &amp; Health Status</string>
     <string name="logout">Logout</string>
+    <string name="membership_id">Membership ID</string>
+    <string name="refresh">Refresh</string>
+    <string name="refreshing">Refreshing...</string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>
