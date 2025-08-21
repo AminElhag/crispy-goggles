@@ -82,6 +82,10 @@
     <string name="membership_id">Membership ID</string>
     <string name="refresh">Refresh</string>
     <string name="refreshing">Refreshing...</string>
+    <string name="classes">Classes</string>
+    <string name="all">All</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>

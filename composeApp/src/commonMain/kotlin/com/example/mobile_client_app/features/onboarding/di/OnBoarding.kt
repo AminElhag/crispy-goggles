@@ -1,5 +1,11 @@
 package com.example.mobile_client_app.features.onboarding.di
 
+import com.example.mobile_client_app.features.onboarding.classes.data.remote.ClassesApi
+import com.example.mobile_client_app.features.onboarding.classes.data.remote.ClassesApiImpl
+import com.example.mobile_client_app.features.onboarding.classes.domain.repository.ClassesRepository
+import com.example.mobile_client_app.features.onboarding.classes.domain.repository.impl.ClassesRepositoryImpl
+import com.example.mobile_client_app.features.onboarding.classes.domain.usecase.GetClassesUseCase
+import com.example.mobile_client_app.features.onboarding.classes.presntation.ClassesViewModel
 import com.example.mobile_client_app.features.onboarding.home.data.remote.HomeAPI
 import com.example.mobile_client_app.features.onboarding.home.data.remote.impl.HomeAPIImpl
 import com.example.mobile_client_app.features.onboarding.home.domain.repository.HomeRepository
@@ -29,4 +35,9 @@ val onBoardingModule = module {
     single { GetQrCodeDataUseCase(get()) }
     single<QrCodeRepository> { QrCodeRepositoryImpl(get()) }
     single<QrCodeAPI> { QrCodeAPIImpl(get()) }
+
+    viewModel { ClassesViewModel(get()) }
+    single { GetClassesUseCase(get()) }
+    single<ClassesRepository> { ClassesRepositoryImpl(get()) }
+    single<ClassesApi> { ClassesApiImpl(get()) }
 }

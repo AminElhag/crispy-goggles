@@ -1,5 +1,7 @@
 package com.example.mobile_client_app.util.network
 
+import com.example.mobile_client_app.features.onboarding.classes.data.model.FitnessClassResponse
+
 sealed interface Result<out D, out E : NetworkError> {
     data class Success<out D>(val data: D) : Result<D, Nothing>
     data class Error<out E : NetworkError>(val error: E) : Result<Nothing, E>

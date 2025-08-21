@@ -85,6 +85,9 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                             inclusive = true
                         }
                     }
+                },
+                onClassClick = {
+
                 }
             )
         }

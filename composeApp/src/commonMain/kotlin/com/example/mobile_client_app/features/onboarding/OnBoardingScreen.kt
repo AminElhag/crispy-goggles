@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.example.mobile_client_app.features.auth.profile.presentation.ProfileScreen
+import com.example.mobile_client_app.features.onboarding.classes.presntation.ClassesScreen
 import com.example.mobile_client_app.features.onboarding.home.presntation.HomeScreen
 import com.example.mobile_client_app.features.onboarding.qrCode.presntation.QrCodeScreen
 
@@ -28,6 +29,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 fun OnBoardingScreen(
     onNotificationsClick: () -> Unit,
     onLogoutTrigger: () -> Unit,
+    onClassClick: (id: String) -> Unit,
 ) {
     var selectedScreen by remember { mutableStateOf(Screen.Home.route) }
 
@@ -92,7 +94,9 @@ fun OnBoardingScreen(
                 }
 
                 Screen.Classes.route -> {
-                    Text(text = "Classes", style = MaterialTheme.typography.bodyLarge)
+                    ClassesScreen {
+                        onClassClick(it)
+                    }
                 }
             }
         }
