@@ -70,19 +70,16 @@ fun PaymentScreen(
     if (viewModel.isLoading) {
         LoadingOverlay()
     }
-    if (viewModel.showErrorDialog) {
-        CustomErrorDialog(
-            showDialog = true,
-            message = viewModel.errorDialogMessage ?: stringResource(Res.string.generic_error),
-            onDismiss = {
-                viewModel.updateShowErrorDialog(false)
-                onCompleted()
-            },
-            onRetry = {
-                viewModel.updateShowErrorDialog(false)
-            },
-            onRetryMessage = Res.string.retry
-        )
-    }
-
+    CustomErrorDialog(
+        showDialog = true,
+        message = viewModel.errorDialogMessage ?: stringResource(Res.string.generic_error),
+        onDismiss = {
+            viewModel.updateShowErrorDialog(false)
+            onCompleted()
+        },
+        onRetry = {
+            viewModel.updateShowErrorDialog(false)
+        },
+        onRetryMessage = Res.string.retry
+    )
 }

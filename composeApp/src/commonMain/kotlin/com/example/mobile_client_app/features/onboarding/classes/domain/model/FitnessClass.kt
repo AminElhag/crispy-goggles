@@ -14,6 +14,4 @@ data class FitnessClass(
             fun getById(id: Int): ClassDate? = entries.find { it.id == id }
         }
     }
-
-
 }
