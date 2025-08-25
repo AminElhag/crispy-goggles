@@ -31,6 +31,7 @@ fun OnBoardingScreen(
     onNotificationsClick: () -> Unit,
     onLogoutTrigger: () -> Unit,
     onClassClick: (id: String) -> Unit,
+    onAddAppointmentClick: () -> Unit,
 ) {
     var selectedScreen by remember { mutableStateOf(Screen.Home.route) }
 
@@ -91,7 +92,9 @@ fun OnBoardingScreen(
                 }
 
                 Screen.Store.route -> {
-                    AppointmentsScreen()
+                    AppointmentsScreen(
+                        onAddAppointmentClick = onAddAppointmentClick
+                    )
                 }
 
                 Screen.Classes.route -> {

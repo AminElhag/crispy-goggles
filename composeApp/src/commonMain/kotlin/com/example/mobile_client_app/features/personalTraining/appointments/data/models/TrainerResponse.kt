@@ -1,4 +1,4 @@
-package com.example.backend.mobileClient.features.appointment.controller.models
+package com.example.mobile_client_app.features.personalTraining.appointments.data.models
 
 import com.example.mobile_client_app.features.personalTraining.appointments.domain.model.Trainer
 import kotlinx.serialization.SerialName
@@ -13,8 +13,12 @@ data class TrainerResponse(
     @SerialName("avatar")
     val avatar: String,
     @SerialName("speciality")
-    val specialty: String = ""
-) {
+    val specialty: String = "",
+    @SerialName("rating")
+    val rating: Double,
+    @SerialName("review_count")
+    val reviewCount: Int,
+    ) {
     fun toDto() = Trainer(
         id, name, avatar, specialty
     )

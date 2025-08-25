@@ -93,6 +93,9 @@
     <string name="in_progress">InProgress</string>
     <string name="warning">Warning</string>
     <string name="appointments_cancel_message">Are you sure you want to cancel your reservation? This could result in a cancellation fee.</string>
+    <string name="book_a_session">Book a session</string>
+    <string name="step_number_of">Step %1$d of %2$d</string>
+    <string name="choose_a_trainer">Choose a trainer</string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>

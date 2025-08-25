@@ -21,6 +21,7 @@ import com.example.mobile_client_app.features.membership.payment.di.paymentModul
 import com.example.mobile_client_app.features.notifications.di.notificationsModule
 import com.example.mobile_client_app.features.onboarding.di.onBoardingModule
 import com.example.mobile_client_app.features.personalTraining.appointments.appointmentsModule
+import com.example.mobile_client_app.features.personalTraining.trainerSelection.trainerSelection
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -45,6 +46,7 @@ class MainActivity : ComponentActivity() {
                     notificationsModule,
                     profileModule,
                     appointmentsModule,
+                    trainerSelection
                 )
             )
         }

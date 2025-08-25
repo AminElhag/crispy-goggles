@@ -114,3 +114,5 @@ val TertiaryPaletteKeyColor = Color(0xFFF2F2F2)
 val NeutralPaletteKeyColor = Color(0xFFF2F2F2)
 val NeutralVariantPaletteKeyColor = Color(0xFFFFFFFF)
 val ErrorPaletteKeyColor = Color(0xFFFF3939)
+
+val GoldColor = Color(0xFFFFD700)

@@ -13,6 +13,7 @@ import com.example.mobile_client_app.features.membership.main.presentation.Membe
 import com.example.mobile_client_app.features.membership.payment.presentation.PaymentScreen
 import com.example.mobile_client_app.features.notifications.presntation.list.NotificationsListScreen
 import com.example.mobile_client_app.features.onboarding.OnBoardingScreen
+import com.example.mobile_client_app.features.personalTraining.trainerSelection.presntation.TrainerSelectionScreen
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -87,7 +88,10 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                     }
                 },
                 onClassClick = {
-
+                    navController.navigate(AppScreen.ClassDetail.route)
+                },
+                onAddAppointmentClick = {
+                    navController.navigate(AppScreen.AddAppointment.route)
                 }
             )
         }
@@ -98,6 +102,13 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                 }
             )
         }
+        composable(AppScreen.AddAppointment.route) {
+            TrainerSelectionScreen(
+                onCancelBookingClick = {}
+            )
+        }
+        composable(AppScreen.ClassDetail.route) {
 
+        }
     }
 }

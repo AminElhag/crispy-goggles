@@ -1,5 +1,6 @@
 package com.example.backend.mobileClient.features.appointment.controller.models
 
+import com.example.mobile_client_app.features.personalTraining.appointments.data.models.TrainerResponse
 import com.example.mobile_client_app.features.personalTraining.appointments.domain.model.Appointment
 import com.example.mobile_client_app.features.personalTraining.appointments.domain.model.Appointment.AppointmentStatus.Companion.getById
 import kotlinx.serialization.SerialName

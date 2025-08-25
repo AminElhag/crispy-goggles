@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,6 +31,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AppointmentsScreen(
     viewModel: AppointmentsViewModel = koinViewModel(),
+    onAddAppointmentClick: () -> Unit,
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
@@ -45,6 +48,14 @@ fun AppointmentsScreen(
                 CenterAlignedTopAppBar(
                     title = { Text(stringResource(Res.string.appointments)) },
                 )
+            },
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = onAddAppointmentClick,
+
+                ){
+                    Icon(Icons.Default.Add, contentDescription = "Add")
+                }
             }
         ) { innerPadding ->
             Column(

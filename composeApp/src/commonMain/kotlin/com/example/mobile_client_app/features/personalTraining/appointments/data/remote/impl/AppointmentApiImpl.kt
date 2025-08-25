@@ -19,7 +19,7 @@ class AppointmentApiImpl(
 ) : AppointmentApi {
     override suspend fun getAppointments(): Result<List<AppointmentResponse>, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/appointment")
+            httpClient.get("/api/v1/personalTraining/appointments")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
