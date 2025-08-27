@@ -96,6 +96,13 @@
     <string name="book_a_session">Book a session</string>
     <string name="step_number_of">Step %1$d of %2$d</string>
     <string name="choose_a_trainer">Choose a trainer</string>
+    <string name="select_training_type">Select training type</string>
+    <string name="training_specialization">Training specialization</string>
+    <string name="choose_a_date">Choose a date</string>
+    <string name="successful">Successful</string>
+    <string name="appointment_successful_message">
+        Your appointment has been sent to the personal trainer. Once they accept it, the scheduling will be confirmed
+    </string>
 
     <string name="sudan">SUDAN</string>
     <string name="saudi">SAUDI</string>

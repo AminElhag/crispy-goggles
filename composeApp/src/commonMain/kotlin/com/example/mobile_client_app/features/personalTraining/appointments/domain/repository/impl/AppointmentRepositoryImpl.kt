@@ -5,6 +5,7 @@ import com.example.mobile_client_app.features.personalTraining.appointments.data
 import com.example.mobile_client_app.features.personalTraining.appointments.domain.repository.AppointmentRepository
 import com.example.mobile_client_app.features.personalTraining.appointments.domain.model.Appointment
 import com.example.mobile_client_app.features.personalTraining.appointments.data.remote.AppointmentApi
+import com.example.mobile_client_app.features.personalTraining.appointments.data.models.RequestAppointmentRequest
 import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.Result
 
@@ -17,5 +18,9 @@ class AppointmentRepositoryImpl(
 
     override suspend fun cancelAppointment(appointmentId: String): Result<Unit, NetworkError> {
         return api.cancelAppointment(CancelAppointmentRequest(appointmentId))
+    }
+
+    override suspend fun requestAppointment(requestAppointmentRequest: RequestAppointmentRequest): Result<Unit, NetworkError> {
+        return api.requestAppointment(requestAppointmentRequest)
     }
 }

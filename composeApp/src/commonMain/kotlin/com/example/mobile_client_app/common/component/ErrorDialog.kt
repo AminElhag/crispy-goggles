@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.style.TextAlign
 import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.error
 import mobile_client_app.composeapp.generated.resources.ok
@@ -40,7 +41,8 @@ fun CustomErrorDialog(
             text = {
                 Text(
                     message,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
                 )
             },
             confirmButton = {

@@ -10,4 +10,5 @@ sealed class AppScreen(val route: String) {
     object Notification : AppScreen("notification")
     object AddAppointment : AppScreen("add_appointment")
     object ClassDetail : AppScreen("detail_class")
+    object TrainerSelection : AppScreen("trainer_selection")
 }

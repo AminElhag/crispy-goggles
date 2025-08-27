@@ -1,5 +1,6 @@
-package com.example.mobile_client_app.features.personalTraining.trainerSelection.presntation
+package com.example.mobile_client_app.features.personalTraining.trainerSelection.presentation.trainerSelection
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.features.personalTraining.appointments.data.models.TrainerResponse
@@ -10,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-
 
 data class TrainerSelectionScreenUiState(
     val isLoading: Boolean = false,
@@ -23,6 +23,8 @@ class TrainerSelectionViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(TrainerSelectionScreenUiState())
     val uiState: StateFlow<TrainerSelectionScreenUiState> = _uiState.asStateFlow()
+
+    var selectedTrainerId = mutableStateOf<String?>(null)
 
     init {
         getTrainers()
@@ -41,6 +43,14 @@ class TrainerSelectionViewModel(
 
     fun onRefresh() {
         getTrainers()
+    }
+
+    fun isTrainerSelected(id: String): Boolean {
+        return selectedTrainerId.value == id
+    }
+
+    fun updateTrainerSelected(id: String) {
+        selectedTrainerId.value = id
     }
 
 }

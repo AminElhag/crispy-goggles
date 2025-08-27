@@ -8,10 +8,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.mobile_client_app.common.component.DateRangePickerDialog
 import com.example.mobile_client_app.common.component.FullScreenError
 import com.example.mobile_client_app.common.component.FullScreenLoading
 import com.example.mobile_client_app.common.component.LoadingOverlay
-import com.example.mobile_client_app.features.auth.profile.presentation.components.*
+import com.example.mobile_client_app.common.models.DateRangePickerConfig
+import com.example.mobile_client_app.features.auth.profile.presentation.components.CurrentStatusSection
+import com.example.mobile_client_app.features.auth.profile.presentation.components.FreezeMembershipButton
+import com.example.mobile_client_app.features.auth.profile.presentation.components.HealthStatusSection
+import com.example.mobile_client_app.features.auth.profile.presentation.components.ProfileSection
 import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.profile
 import org.jetbrains.compose.resources.stringResource
@@ -35,6 +40,7 @@ fun ProfileScreen(
                 snackbarHostState.showSnackbar(event.message)
                 viewModel.resetEvent()
             }
+
             ProfileScreenUiEvent.Logout -> {
                 onLogoutTrigger()
             }
@@ -90,7 +96,7 @@ fun ProfileScreen(
                 )
             }
             if (viewModel.getShowFreezingDialog()) {
-                FreezeMembershipDateRangePickerDialog(
+                DateRangePickerDialog(
                     onDismiss = {
                         viewModel.onFreezingSend()
                     },

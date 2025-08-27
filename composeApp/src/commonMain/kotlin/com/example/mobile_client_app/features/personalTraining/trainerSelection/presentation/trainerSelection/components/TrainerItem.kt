@@ -1,4 +1,4 @@
-package com.example.mobile_client_app.features.personalTraining.trainerSelection.presntation.components
+package com.example.mobile_client_app.features.personalTraining.trainerSelection.presentation.trainerSelection.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

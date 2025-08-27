@@ -4,6 +4,7 @@ import com.example.backend.mobileClient.features.appointment.controller.models.A
 import com.example.mobile_client_app.features.personalTraining.appointments.data.models.CancelAppointmentRequest
 import com.example.mobile_client_app.features.personalTraining.appointments.domain.model.Appointment
 import com.example.mobile_client_app.features.personalTraining.appointments.data.remote.AppointmentApi
+import com.example.mobile_client_app.features.personalTraining.appointments.data.models.RequestAppointmentRequest
 import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.Result
 import com.example.mobile_client_app.util.network.toException
@@ -39,6 +40,26 @@ class AppointmentApiImpl(
         val response = try {
             httpClient.post("/api/v1/appointment/cancel"){
                 setBody(request)
+            }
+        } catch (e: NetworkError) {
+            return Result.Error(e)
+        } catch (e: Exception) {
+            return Result.Error(NetworkError.UnknownError(e))
+        }
+        return when (response.status.value) {
+            in 200..299 -> {
+                val response = response.body<Unit>()
+                Result.Success(response)
+            }
+
+            else -> Result.Error(response.toException())
+        }
+    }
+
+    override suspend fun requestAppointment(requestAppointmentRequest: RequestAppointmentRequest): Result<Unit, NetworkError> {
+        val response = try {
+            httpClient.post("/api/v1/personalTraining/appointments"){
+                setBody(requestAppointmentRequest)
             }
         } catch (e: NetworkError) {
             return Result.Error(e)

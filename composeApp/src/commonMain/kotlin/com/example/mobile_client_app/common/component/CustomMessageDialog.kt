@@ -4,6 +4,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import mobile_client_app.composeapp.generated.resources.Res
 import mobile_client_app.composeapp.generated.resources.cancel
 import mobile_client_app.composeapp.generated.resources.ok
@@ -20,7 +22,7 @@ fun CustomMessageDialog(
     onConfirmMessage: StringResource = Res.string.ok,
     onConfirmClick: () -> Unit,
     onCancelMessage: StringResource = Res.string.cancel,
-    onCancelClick: () -> Unit,
+    onCancelClick: (() -> Unit)? = null,
 ) {
     if (showDialog) {
         AlertDialog(
@@ -41,7 +43,8 @@ fun CustomMessageDialog(
             text = {
                 Text(
                     message,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Center,
                 )
             },
             confirmButton = {
@@ -49,7 +52,7 @@ fun CustomMessageDialog(
                     Text(stringResource(onConfirmMessage))
                 }
             },
-            dismissButton =
+            dismissButton = onCancelClick?.let {
                 {
                     TextButton(onClick = {
                         onCancelClick()
@@ -57,6 +60,7 @@ fun CustomMessageDialog(
                         Text(stringResource(onCancelMessage))
                     }
                 }
+            }
         )
     }
 }
