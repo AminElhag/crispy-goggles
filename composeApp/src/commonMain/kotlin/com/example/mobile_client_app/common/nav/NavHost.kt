@@ -10,6 +10,7 @@ import androidx.navigation.navArgument
 import com.example.mobile_client_app.features.auth.login.presentation.ui.LoginScreen
 import com.example.mobile_client_app.features.auth.registering.presentaion.ui.AdditionInformationScreen
 import com.example.mobile_client_app.features.auth.registering.presentaion.ui.RegisteringScreen
+import com.example.mobile_client_app.features.classes.bookingClass.presentation.BookingClassScreen
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.presentation.MembershipScreen
 import com.example.mobile_client_app.features.membership.payment.presentation.PaymentScreen
@@ -17,6 +18,7 @@ import com.example.mobile_client_app.features.notifications.presntation.list.Not
 import com.example.mobile_client_app.features.onboarding.OnBoardingScreen
 import com.example.mobile_client_app.features.personalTraining.trainerSelection.presentation.trainerSelection.TrainerSelectionScreen
 import com.example.mobile_client_app.features.personalTraining.trainerSelection.presentation.trainingSelection.TrainingSelectionScreen
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Composable
@@ -91,11 +93,11 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                     }
                 },
                 onClassClick = {
-                    navController.navigate(AppScreen.ClassDetail.route)
+                    navController.navigate(AppScreen.ClassDetail.route + "/$it")
                 },
                 onAddAppointmentClick = {
                     navController.navigate(AppScreen.AddAppointment.route)
-                }
+                },
             )
         }
         composable(AppScreen.Notification.route) {
@@ -115,8 +117,17 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                 }
             )
         }
-        composable(AppScreen.ClassDetail.route) {
-
+        composable(AppScreen.ClassDetail.route + "/{classId}") { backStackEntry ->
+            val classId = backStackEntry.savedStateHandle.get<String>("classId")?.toIntOrNull() ?: return@composable
+            BookingClassScreen(
+                classId = classId,
+                onCancelBookingClick = {
+                    navController.popBackStack()
+                },
+                onConfirmClick = {
+                    navController.popBackStack()
+                }
+            )
         }
 
         composable(

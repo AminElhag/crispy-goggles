@@ -1,12 +1,10 @@
-package com.example.mobile_client_app.features.onboarding.classes.data.remote
+package com.example.mobile_client_app.features.classes.bookingClass.domain.repository
 
 import com.example.mobile_client_app.features.classes.bookingClass.data.models.ClassDetailsResponse
-import com.example.mobile_client_app.features.onboarding.classes.data.model.FitnessClassResponse
 import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.Result
 
-interface ClassesApi {
-    suspend fun getClasses(): Result<List<FitnessClassResponse>, NetworkError>
+interface ClassRepository {
     suspend fun getClassDetails(classId: Int): Result<ClassDetailsResponse, NetworkError>
     suspend fun sendBookingClassRequest(classId: Int): Result<Unit, NetworkError>
 }

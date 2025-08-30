@@ -14,6 +14,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 import saschpe.log4k.Log
@@ -24,6 +25,7 @@ val networkModule = module {
     single { TokenManager(get<DataStore<Preferences>>()) }
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 fun provideHttpClient(
     engine: HttpClientEngine,
     tokenManager: TokenManager,

@@ -3,6 +3,7 @@ package com.example.mobile_client_app.di
 import com.example.mobile_client_app.features.auth.login.di.loginModule
 import com.example.mobile_client_app.features.auth.profile.profileModule
 import com.example.mobile_client_app.features.auth.registering.di.registeringModule
+import com.example.mobile_client_app.features.classes.bookingClass.bookingClassModel
 import com.example.mobile_client_app.features.membership.main.di.membershipModule
 import com.example.mobile_client_app.features.membership.payment.di.paymentModule
 import com.example.mobile_client_app.features.notifications.di.notificationsModule
@@ -27,5 +28,6 @@ fun initKoin(config: KoinAppDeclaration? = null) =
             profileModule,
             appointmentsModule,
             trainerSelection,
+            bookingClassModel,
         )
     }

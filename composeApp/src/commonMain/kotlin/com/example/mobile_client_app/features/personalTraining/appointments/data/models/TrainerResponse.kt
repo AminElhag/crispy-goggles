@@ -18,6 +18,8 @@ data class TrainerResponse(
     val rating: Double,
     @SerialName("review_count")
     val reviewCount: Int,
+    @SerialName("discretion")
+    val discretion: String,
     ) {
     fun toDto() = Trainer(
         id, name, avatar, specialty

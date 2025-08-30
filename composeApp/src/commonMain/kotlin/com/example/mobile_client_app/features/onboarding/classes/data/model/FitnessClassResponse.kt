@@ -8,7 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FitnessClassResponse(
     @SerialName("id")
-    val id: String,
+    val id: Int,
     @SerialName("name")
     val name: String,
     @SerialName("time")

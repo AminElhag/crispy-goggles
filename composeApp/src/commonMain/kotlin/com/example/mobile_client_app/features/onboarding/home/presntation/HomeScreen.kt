@@ -31,7 +31,7 @@ fun HomeScreen(
     viewModel: HomeScreenViewModel = koinViewModel(),
     onNotificationsClick: () -> Unit,
     onBannerClick: (deepLink: String) -> Unit,
-    onViewClassClick: (classId: Long) -> Unit,
+    onViewClassClick: (classId: Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     if (uiState.isLoading) {

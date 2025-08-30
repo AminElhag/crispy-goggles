@@ -1,3 +1,4 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -17,6 +18,10 @@ kotlin {
         }
     }
 
+    /*cocoapods {
+        pod("Reachability", "~> 3.2")
+    }*/
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -29,7 +34,6 @@ kotlin {
     }
 
     sourceSets {
-
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -46,7 +50,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.navigation.compose)
             implementation(libs.ktor.client.core)
@@ -58,7 +62,6 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.auth)
-            api(libs.konnectivity)
             implementation(libs.log4k)
             implementation(libs.kotlinx.datetime)
             implementation(libs.datastore)
@@ -66,6 +69,8 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
             implementation(libs.qrcode)
+            implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+            implementation(libs.androidx.lifecycle.viewmodel)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -104,8 +109,8 @@ android {
 }
 
 dependencies {
-    implementation("io.ktor:ktor-client-okhttp-jvm:3.1.3")
-    implementation("io.ktor:ktor-client-auth:3.1.3")
     debugImplementation(compose.uiTooling)
+    implementation(libs.ktor.client.okhttp.jvm)
+    implementation(libs.ktor.client.auth)
 }
 

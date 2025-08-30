@@ -90,6 +90,7 @@
     <string name="pending">Pending</string>
     <string name="complete">Complete</string>
     <string name="scheduled">Scheduled</string>
+    <string name="schedule">Schedule</string>
     <string name="in_progress">InProgress</string>
     <string name="warning">Warning</string>
     <string name="appointments_cancel_message">Are you sure you want to cancel your reservation? This could result in a cancellation fee.</string>
@@ -102,6 +103,14 @@
     <string name="successful">Successful</string>
     <string name="appointment_successful_message">
         Your appointment has been sent to the personal trainer. Once they accept it, the scheduling will be confirmed
+    </string>
+    <string name="duration">Duration</string>
+    <string name="intensity">Intensity</string>
+    <string name="equipment">Equipment</string>
+    <string name="trainer">Trainer</string>
+    <string name="book_now">Book Now</string>
+    <string name="class_successful_message">
+        Your booking for the class has been successfully confirmed! We look forward to seeing you there.
     </string>
 
     <string name="sudan">SUDAN</string>

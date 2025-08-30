@@ -1,5 +1,7 @@
 package com.example.mobile_client_app.common.nav
 
+import org.jetbrains.compose.resources.StringResource
+
 sealed class AppScreen(val route: String) {
     object Login : AppScreen("login")
     object Registering : AppScreen("registering")

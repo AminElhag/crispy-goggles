@@ -29,7 +29,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ClassesScreen(
     viewModel: ClassesViewModel = koinViewModel(),
-    onClassClick: (id: String) -> Unit,
+    onClassClick: (id: Int) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
