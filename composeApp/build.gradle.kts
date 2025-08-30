@@ -71,6 +71,7 @@ kotlin {
             implementation(libs.qrcode)
             implementation(libs.androidx.lifecycle.viewmodel.savedstate)
             implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.koin.compose.viewmodel.nav)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
