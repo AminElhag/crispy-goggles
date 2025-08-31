@@ -31,7 +31,7 @@ fun DateRangePickerDialog(
     initialEndDate: LocalDate? = null,
     config: DateRangePickerConfig = DateRangePickerConfig()
 ) {
-    var currentMonth by remember { mutableStateOf(Clock.System.todayIn(TimeZone.currentSystemDefault())) }
+    var currentMonth by remember { mutableStateOf(kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date) }
     var startDate by remember { mutableStateOf(initialStartDate) }
     var endDate by remember { mutableStateOf(initialEndDate) }
     var errorMessage by remember { mutableStateOf<String?>(null) }

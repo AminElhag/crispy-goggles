@@ -55,7 +55,7 @@ class TrainingSelectionViewModel(
     private val selectedDate = mutableStateOf<LocalDate?>(null)
 
     @OptIn(ExperimentalTime::class)
-    var currentMonth = mutableStateOf(Clock.System.todayIn(TimeZone.currentSystemDefault()))
+    var currentMonth = mutableStateOf(kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
 
     var errorMessage = mutableStateOf<String?>(null)
 
@@ -119,8 +119,8 @@ class TrainingSelectionViewModel(
     @OptIn(ExperimentalTime::class)
     fun dateRangeConfig() = DateRangePickerConfig(
         allowPastDates = false,
-        minDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
-        maxDate = Clock.System.todayIn(TimeZone.currentSystemDefault()).plus(7, DateTimeUnit.DAY),
+        minDate = kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+        maxDate = kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.plus(7, DateTimeUnit.DAY),
         allowSingleDate = true,
         allowStartDateSelection = true,
         allowEndDateSelection = false

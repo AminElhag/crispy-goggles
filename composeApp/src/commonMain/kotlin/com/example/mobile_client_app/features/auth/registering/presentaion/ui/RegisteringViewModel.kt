@@ -288,12 +288,11 @@ class RegisteringViewModel(
     }
 
     fun sendCreateRequest() {
-        isConnected = checkInternetConnection(viewModelScope)
+        isConnected = checkInternetConnection()
         if (!isConnected) {
             _events.value = RegisteringEvent.ShowSnackbar("Internet is not connected")
         } else {
             isLoading = true
-            Log.debug { "Birth Date: ${dataOfBirth}" }
             viewModelScope.launch {
                 createUserUseCase.invoke(
                     UserDTO(

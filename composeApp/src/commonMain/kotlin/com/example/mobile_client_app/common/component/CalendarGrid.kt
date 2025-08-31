@@ -13,7 +13,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mobile_client_app.common.models.DateRangePickerConfig
 import kotlinx.datetime.*
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -26,7 +25,7 @@ fun CalendarGrid(
     onDateSelected: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     val daysInMonth = currentMonth.daysUntil(currentMonth.plus(1, DateTimeUnit.MONTH))
     val firstDayOfMonth = LocalDate(currentMonth.year, currentMonth.month, 1)
     val startDayOfWeek = firstDayOfMonth.dayOfWeek.ordinal

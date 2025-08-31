@@ -183,7 +183,7 @@ class PaymentViewModel(
 
         val fullYear = 2000 + year
 
-        val date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        val date = kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
         val currentYear = date.year
         val currentMonth = date.month.number

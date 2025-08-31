@@ -14,7 +14,7 @@ data class UserDTO(
     val middleName: String,
     val lastName: String,
     val idNumber: String,
-    val dataOfBirth: LocalDate?,
+    val dataOfBirth: LocalDate? = null,
     val genderId: Int,
     val phoneNumber: String,
     val email: String,

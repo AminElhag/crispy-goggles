@@ -175,7 +175,8 @@ fun AdditionInformationScreen(
                     onValueChange = { viewModel.updateOccupation(it) },
                     placeholder = stringResource(Res.string.occupation),
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 8.dp),
                 )
 
                 Box(
@@ -229,13 +230,15 @@ fun AdditionInformationScreen(
                                                 stringResource(checked.name),
                                                 style = MaterialTheme.typography.bodySmall
                                             )
-                                            Checkbox(checked = viewModel.isMedicalConditionIsSelected(checked.id), onCheckedChange = {
-                                                if (viewModel.isMedicalConditionIsSelected(checked.id)){
-                                                    viewModel.removeMedicalCondition(checked)
-                                                }else{
-                                                    viewModel.addMedicalCondition(checked)
-                                                }
-                                            })
+                                            Checkbox(
+                                                checked = viewModel.isMedicalConditionIsSelected(checked.id),
+                                                onCheckedChange = {
+                                                    if (viewModel.isMedicalConditionIsSelected(checked.id)) {
+                                                        viewModel.removeMedicalCondition(checked)
+                                                    } else {
+                                                        viewModel.addMedicalCondition(checked)
+                                                    }
+                                                })
                                         }
                                     },
                                     onClick = {

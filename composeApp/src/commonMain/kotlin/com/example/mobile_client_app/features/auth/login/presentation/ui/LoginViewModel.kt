@@ -44,7 +44,7 @@ class LoginViewModel(
     var isConnected = false
 
     fun login() {
-        isConnected = checkInternetConnection(viewModelScope)
+        isConnected = checkInternetConnection()
         viewModelScope.launch {
             if (!isConnected) {
                 _events.value = LoginEvent.ShowSnackbar("Internet is not connected")

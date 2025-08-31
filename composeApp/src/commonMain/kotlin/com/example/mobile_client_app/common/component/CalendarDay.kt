@@ -57,7 +57,7 @@ fun CalendarDay(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = date.day.toString(),
+            text = date.dayOfMonth.toString(),
             style = MaterialTheme.typography.bodyMedium,
             color = textColor,
             fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal

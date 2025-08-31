@@ -18,10 +18,6 @@ kotlin {
         }
     }
 
-    /*cocoapods {
-        pod("Reachability", "~> 3.2")
-    }*/
-
     listOf(
         iosX64(),
         iosArm64(),
@@ -72,6 +68,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.savedstate)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.koin.compose.viewmodel.nav)
+            implementation(libs.konnection)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

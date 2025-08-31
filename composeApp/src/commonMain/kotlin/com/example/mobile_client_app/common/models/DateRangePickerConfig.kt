@@ -4,6 +4,7 @@ import com.example.mobile_client_app.common.formatDate
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.daysUntil
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.todayIn
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -20,7 +21,7 @@ data class DateRangePickerConfig(
 ){
     @OptIn(ExperimentalTime::class)
     fun validateDateSelection(selectedDate: LocalDate): String? {
-        val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+        val today = kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
         if (!allowPastDates && selectedDate < today) {
             return "Past dates are not allowed"

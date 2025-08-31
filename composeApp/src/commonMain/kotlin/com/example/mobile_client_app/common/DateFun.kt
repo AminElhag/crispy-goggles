@@ -17,5 +17,5 @@ fun formatDateRange(startDate: LocalDate?, endDate: LocalDate?, config: DateRang
 }
 
 fun formatDate(date: LocalDate): String {
-    return "${date.day} ${date.month.name.take(3)} ${date.year}"
+    return "${date.dayOfMonth} ${date.month.name.take(3)} ${date.year}"
 }

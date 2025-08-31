@@ -1,5 +1,6 @@
 package com.example.mobile_client_app.common.component
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
@@ -7,7 +8,6 @@ import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import saschpe.log4k.Log
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
 fun millisToDate(millis: Long): LocalDate {
@@ -18,7 +18,7 @@ fun millisToDate(millis: Long): LocalDate {
 }
 
 fun LocalDateTime?.toDDMMYYY(): String? {
-    return if (this == null) null else this.day.pad(2) +
+    return if (this == null) null else this.dayOfMonth.pad(2) +
             "/${this.month.number.pad(2)}/" +
             this.year.pad(2)
 }

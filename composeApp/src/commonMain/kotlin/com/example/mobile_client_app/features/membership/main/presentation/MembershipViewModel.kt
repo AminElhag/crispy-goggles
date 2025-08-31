@@ -97,7 +97,7 @@ class MembershipViewModel(
 
     fun fetchMembershipPlans() {
         _uiState.value = UiState.Loading
-        isConnected = checkInternetConnection(viewModelScope)
+        isConnected = checkInternetConnection()
         if (isConnected) {
             CoroutineScope(Dispatchers.Default).launch {
                 getMembershipUseCase.invoke().onSuccess { response ->

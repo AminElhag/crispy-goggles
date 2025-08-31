@@ -1,12 +1,15 @@
 package com.example.mobile_client_app.common.nav
 
 import androidx.compose.runtime.Composable
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mobile_client_app.common.rememberTokenState
 import com.example.mobile_client_app.features.auth.login.presentation.ui.LoginScreen
 import com.example.mobile_client_app.features.auth.registering.presentaion.ui.AdditionInformationScreen
 import com.example.mobile_client_app.features.auth.registering.presentaion.ui.RegisteringScreen
@@ -18,14 +21,20 @@ import com.example.mobile_client_app.features.notifications.presntation.list.Not
 import com.example.mobile_client_app.features.onboarding.OnBoardingScreen
 import com.example.mobile_client_app.features.personalTraining.trainerSelection.presentation.trainerSelection.TrainerSelectionScreen
 import com.example.mobile_client_app.features.personalTraining.trainerSelection.presentation.trainingSelection.TrainingSelectionScreen
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.koin.compose.koinInject
 
 @Composable
-fun AppNavHost(navController: NavHostController = rememberNavController()) {
+fun AppNavHost(
+    navController: NavHostController = rememberNavController()
+) {
+
+    val dataStore: DataStore<Preferences> = koinInject()
+    val tokenState = rememberTokenState(dataStore)
+
     NavHost(
         navController = navController,
-        startDestination = AppScreen.OnBoarding.route
+        startDestination = if (tokenState.hasToken) AppScreen.OnBoarding.route else AppScreen.Login.route
     ) {
         composable(AppScreen.Login.route) {
             LoginScreen(

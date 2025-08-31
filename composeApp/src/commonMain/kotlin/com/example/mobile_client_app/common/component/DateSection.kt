@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DateSection(
-    datePickerState: DatePickerState,
+    datePickerState: DatePickerState = rememberDatePickerState(),
     hasOutTitle: Boolean = true,
     title: String = "",
     onClick: () -> Unit,

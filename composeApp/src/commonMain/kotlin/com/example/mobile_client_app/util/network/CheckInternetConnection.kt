@@ -1,10 +1,13 @@
 package com.example.mobile_client_app.util.network
 
-import kotlinx.coroutines.CoroutineScope
+import dev.tmapps.konnection.Konnection
 
 fun checkInternetConnection(
-    scope: CoroutineScope,
+
 ): Boolean {
+    val konnection = Konnection.createInstance()
+    val hasNetworkConnection = konnection.isConnected()
+    return hasNetworkConnection
     /*var isConnected = false
     scope.launch {
         NetworkManager.networkState.collectLatest { networkState ->
@@ -16,6 +19,6 @@ fun checkInternetConnection(
         }
     }
     Log.debug { "Internet is connection : $isConnected" }
-    return isConnected*/
-    return true
+    return isConnected*//*
+    return true*/
 }
