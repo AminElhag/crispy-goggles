@@ -1,6 +1,7 @@
 package com.example.mobile_client_app.common.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavHostController
@@ -11,8 +12,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mobile_client_app.common.rememberTokenState
 import com.example.mobile_client_app.features.auth.login.presentation.ui.LoginScreen
-import com.example.mobile_client_app.features.auth.registering.presentaion.ui.AdditionInformationScreen
-import com.example.mobile_client_app.features.auth.registering.presentaion.ui.RegisteringScreen
+import com.example.mobile_client_app.features.auth.registering.presentaion.RegistrationDataHolder
+import com.example.mobile_client_app.features.auth.registering.presentaion.additionInformation.AdditionInformationScreen
+import com.example.mobile_client_app.features.auth.registering.presentaion.additionInformation.AdditionalInfoViewModel
+import com.example.mobile_client_app.features.auth.registering.presentaion.registering.RegisteringScreen
 import com.example.mobile_client_app.features.classes.bookingClass.presentation.BookingClassScreen
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
 import com.example.mobile_client_app.features.membership.main.presentation.MembershipScreen
@@ -23,6 +26,7 @@ import com.example.mobile_client_app.features.personalTraining.trainerSelection.
 import com.example.mobile_client_app.features.personalTraining.trainerSelection.presentation.trainingSelection.TrainingSelectionScreen
 import kotlinx.serialization.json.Json
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppNavHost(
@@ -46,7 +50,7 @@ fun AppNavHost(
                 }
             )
         }
-        composable(AppScreen.Registering.route) {
+        /*composable(AppScreen.Registering.route) {
             RegisteringScreen(
                 onNavigateToBackPage = {
                     navController.popBackStack()
@@ -55,13 +59,76 @@ fun AppNavHost(
                     navController.navigate(AppScreen.AdditionInformation.route)
                 }
             )
+        }*/
+        /*composable(AppScreen.Registering.route) {
+            RegisteringScreen(
+                onNavigateToBackPage = {
+                    navController.popBackStack()
+                },
+                onNavigateToAdditionInformation = { personalInfoData ->
+                    RegistrationDataHolder.setPersonalInfoData(personalInfoData)
+                    navController.navigate(AppScreen.AdditionInformation.route)
+                }
+            )
         }
         composable(AppScreen.AdditionInformation.route) {
+            val additionalInfoViewModel: AdditionalInfoViewModel = koinViewModel()
+            LaunchedEffect(Unit) {
+                RegistrationDataHolder.getPersonalInfoData()?.let { personalData ->
+                    additionalInfoViewModel.setPersonalInfoData(personalData)
+                }
+            }
+            AdditionInformationScreen(
+                viewModel = additionalInfoViewModel,
+                onNavigateToBackPage = {
+                    navController.popBackStack()
+                },
+                onCreateUserSuccess = {
+                    RegistrationDataHolder.clearData()
+                    navController.navigate(AppScreen.Membership.route)
+                }
+            )
+        }*/
+        /*composable(AppScreen.AdditionInformation.route) {
             AdditionInformationScreen(
                 onNavigateToBackPage = {
                     navController.popBackStack()
                 },
                 onCreateUserSuccess = {
+                    navController.navigate(AppScreen.Membership.route)
+                }
+            )
+        }*/
+        composable(AppScreen.Registering.route) {
+            val dataHolder: RegistrationDataHolder = koinInject()
+            RegisteringScreen(
+                onNavigateToBackPage = {
+                    navController.popBackStack()
+                },
+                onNavigateToAdditionInformation = { personalInfoData ->
+                    dataHolder.setPersonalInfoData(personalInfoData)
+                    navController.navigate(AppScreen.AdditionInformation.route)
+                }
+            )
+        }
+
+        composable(AppScreen.AdditionInformation.route) {
+            val additionalInfoViewModel: AdditionalInfoViewModel = koinViewModel()
+            val dataHolder: RegistrationDataHolder = koinInject()
+
+            LaunchedEffect(Unit) {
+                dataHolder.getPersonalInfoData()?.let { personalData ->
+                    additionalInfoViewModel.setPersonalInfoData(personalData)
+                }
+            }
+
+            AdditionInformationScreen(
+                viewModel = additionalInfoViewModel,
+                onNavigateToBackPage = {
+                    navController.popBackStack()
+                },
+                onCreateUserSuccess = {
+                    dataHolder.clearData()
                     navController.navigate(AppScreen.Membership.route)
                 }
             )

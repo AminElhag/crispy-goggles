@@ -26,8 +26,8 @@ val medicalCondition = mutableListOf(
     MedicalCondition(Res.string.insulin_resistance, 8),
     MedicalCondition(Res.string.multiple_Sclerosis_ms, 9),
     MedicalCondition(Res.string.fibromyalgia, 10),
-    MedicalCondition(Res.string.low_blood_pressure_hypotension, 10),
-    MedicalCondition(Res.string.depression, 10),
+    MedicalCondition(Res.string.low_blood_pressure_hypotension, 11),
+    MedicalCondition(Res.string.depression, 12),
 )
 
 data class MedicalCondition(

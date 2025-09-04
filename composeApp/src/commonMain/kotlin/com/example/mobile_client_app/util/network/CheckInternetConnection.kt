@@ -1,13 +1,17 @@
 package com.example.mobile_client_app.util.network
 
 import dev.tmapps.konnection.Konnection
+import saschpe.log4k.Log
 
 fun checkInternetConnection(
 
 ): Boolean {
-    val konnection = Konnection.createInstance()
+    val konnection = Konnection.createInstance(
+
+    )
     val hasNetworkConnection = konnection.isConnected()
-    return hasNetworkConnection
+    Log.error { "Checking internet connection: $hasNetworkConnection" }
+    return true
     /*var isConnected = false
     scope.launch {
         NetworkManager.networkState.collectLatest { networkState ->

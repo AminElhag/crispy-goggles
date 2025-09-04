@@ -18,7 +18,7 @@ class RegisteringAPIImpl(
 ) : RegisteringAPI {
     override suspend fun registerUser(userRequest: UserRequest): Result<CreateUserResponse, NetworkError> {
         val response = try {
-            httpClient.post("/api/v1/client/register") {
+            httpClient.post("api/users") {
                 setBody(userRequest)
             }
         } catch (e: NetworkError) {
