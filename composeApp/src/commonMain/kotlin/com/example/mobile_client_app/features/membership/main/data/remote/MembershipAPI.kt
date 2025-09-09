@@ -11,7 +11,6 @@ import kotlinx.datetime.LocalDate
 
 interface MembershipAPI {
     suspend fun getMembership(): Result<MembershipResponse, NetworkError>
-
     suspend fun checkPromoCode(promoCode: String, paymentPlanID: Long): Result<CheckPromoCodeResponse, NetworkError>
     suspend fun checkoutInit(request: CheckoutInitRequest,): Result<CheckoutInitResponse, NetworkError>
 }

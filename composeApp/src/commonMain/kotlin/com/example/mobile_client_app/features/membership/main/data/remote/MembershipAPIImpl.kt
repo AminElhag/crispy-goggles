@@ -1,5 +1,6 @@
 package com.example.mobile_client_app.features.membership.main.data.remote
 
+import com.example.mobile_client_app.features.membership.main.data.model.ValidatePromoCodeRequest
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckPromoCodeResponse
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitRequest
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
@@ -11,13 +12,14 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 
+//WELCOME10
 class MembershipAPIImpl(
     private val httpClient: HttpClient
 ) : MembershipAPI {
 
     override suspend fun getMembership(): Result<MembershipResponse, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/membership")
+            httpClient.get("/api/membership/plans")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
@@ -38,7 +40,7 @@ class MembershipAPIImpl(
         request: CheckoutInitRequest,
     ): Result<CheckoutInitResponse, NetworkError> {
         val response = try {
-            httpClient.post("/api/v1/contract/checkout") {
+            httpClient.post("/api/checkout/init") {
                 setBody(request)
             }
         } catch (e: NetworkError) {
@@ -66,9 +68,13 @@ class MembershipAPIImpl(
         paymentPlanID: Long
     ): Result<CheckPromoCodeResponse, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/discounts/validate") {
-                parameter("code", promoCode)
-                parameter("payment_plan_id", paymentPlanID)
+            httpClient.post("/api/promo-codes/validate") {
+                setBody(
+                    ValidatePromoCodeRequest(
+                        promoCode = promoCode,
+                        paymentPlanId = paymentPlanID
+                    )
+                )
             }
         } catch (e: NetworkError) {
             return Result.Error(e)

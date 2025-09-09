@@ -16,7 +16,7 @@ data class MembershipPlan(
     @SerialName("commitment_period")
     val commitmentPeriod: String,
     @SerialName("payment_interval")
-    val paymentInterval: String,
+    val paymentInterval: String?,
     @SerialName("minimum_cancellation_period")
     val minimumCancellationPeriod: String?,
     @SerialName("max_cancellation_period")
@@ -25,6 +25,6 @@ data class MembershipPlan(
     val limitNumberOfVisits: Int?,
     @SerialName("can_be_renew")
     val canBeRenew: Boolean,
-    @SerialName("agreement")
+    @SerialName("agreements")
     val agreements: List<AgreementResponse>?,
 )

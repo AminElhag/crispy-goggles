@@ -71,11 +71,11 @@ fun PaymentScreen(
         LoadingOverlay()
     }
     CustomErrorDialog(
-        showDialog = true,
+        showDialog = viewModel.showErrorDialog,
         message = viewModel.errorDialogMessage ?: stringResource(Res.string.generic_error),
         onDismiss = {
             viewModel.updateShowErrorDialog(false)
-            onCompleted()
+            onCompleted.invoke()
         },
         onRetry = {
             viewModel.updateShowErrorDialog(false)

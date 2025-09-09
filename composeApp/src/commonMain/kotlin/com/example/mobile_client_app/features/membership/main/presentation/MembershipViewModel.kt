@@ -7,12 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_client_app.common.component.millisToDate
-import com.example.mobile_client_app.common.component.toDDMMYYY
-import com.example.mobile_client_app.features.membership.main.domain.model.AgreementDto
-import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitRequest
-import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
-import com.example.mobile_client_app.features.membership.main.domain.model.MembershipPlan
-import com.example.mobile_client_app.features.membership.main.domain.model.MembershipResponse
+import com.example.mobile_client_app.features.membership.main.domain.model.*
 import com.example.mobile_client_app.features.membership.main.domain.useCase.CheckPromoCodeUseCase
 import com.example.mobile_client_app.features.membership.main.domain.useCase.CheckoutInitUseCase
 import com.example.mobile_client_app.features.membership.main.domain.useCase.GetMembershipUseCase
@@ -25,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 import saschpe.log4k.Log
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.days
@@ -40,7 +34,7 @@ sealed class UiState<out T> {
 sealed class MembershipEvent {
     object Reset : MembershipEvent()
     data class ShowSnackbar(val message: String) : MembershipEvent()
-    data class CheckoutInit(val data:  CheckoutInitResponse) : MembershipEvent()
+    data class CheckoutInit(val data: CheckoutInitResponse) : MembershipEvent()
 }
 
 class MembershipViewModel(
@@ -168,10 +162,14 @@ class MembershipViewModel(
 
             else -> {
                 viewModelScope.launch {
+                    Log.debug { "Promo code is $promoCode" }
+                    Log.debug { "Selected plan is $selectedPlan" }
                     checkPromoCodeUseCase.invoke(promoCode, selectedPlan!!.id).onSuccess { response ->
+                        Log.debug { "On Successful response: $response" }
                         if (response.isValid) sendCompleteRequest()
                         else showSnackbar(response.message)
                     }.onError { error ->
+                        Log.debug { "Error response: $error" }
                         showSnackbar(error.displayMessage)
                     }
                 }
@@ -192,8 +190,8 @@ class MembershipViewModel(
                     promoCode = promoCode,
                     acceptAgreementsIds = agreements.filter { it.selected }.mapTo(mutableSetOf()) { it.id },
                 )
-                ).onSuccess {response ->
-                    _events.value = MembershipEvent.CheckoutInit(response)
+            ).onSuccess { response ->
+                _events.value = MembershipEvent.CheckoutInit(response)
             }.onError { error ->
                 showSnackbar(error.displayMessage)
             }
@@ -205,6 +203,9 @@ class MembershipViewModel(
     }
 
     fun hasAgreement(): Boolean {
+        Log.debug { "Checking agreement" }
+        Log.debug { "Selected plan is $selectedPlan" }
+        selectedPlan?.let { Log.debug { "Plan has agreement : ${it.agreements}" } }
         return selectedPlan != null && selectedPlan!!.agreements != null && agreements.isNotEmpty()
     }
 

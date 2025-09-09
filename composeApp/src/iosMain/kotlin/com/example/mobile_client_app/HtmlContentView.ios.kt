@@ -16,11 +16,7 @@ import platform.WebKit.WKWebViewConfiguration
 actual fun HtmlContentView(htmlContent: String, modifier: Modifier) {
     UIKitView(
         factory = {
-            WKWebView(
-                frame = CGRectZero.readValue(), // Convert CGRect to CValue<CGRect>
-                configuration = WKWebViewConfiguration()
-            ).apply {
-                loadRequest(NSURLRequest(NSURL(string = "about:blank")))
+            WKWebView().apply {
                 loadHTMLString(htmlContent, null)
             }
         },

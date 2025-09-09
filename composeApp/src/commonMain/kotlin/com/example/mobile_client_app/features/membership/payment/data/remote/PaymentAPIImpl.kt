@@ -15,7 +15,7 @@ class PaymentAPIImpl(
 ) : PaymentAPI {
     override suspend fun requestPayment(paymentRequest: PaymentRequest): Result<PaymentResponse, NetworkError> {
         val response = try {
-            httpClient.post("/api/v1/contract/payment") {
+            httpClient.post("/api/payments/process") {
                 setBody(paymentRequest)
             }
         } catch (e: NetworkError) {
@@ -27,6 +27,11 @@ class PaymentAPIImpl(
         }
         return when (response.status.value) {
             in 200..299 -> {
+                val response = response.body<PaymentResponse>()
+                Result.Success(response)
+            }
+
+            400 -> {
                 val response = response.body<PaymentResponse>()
                 Result.Success(response)
             }

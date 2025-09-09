@@ -39,7 +39,8 @@ fun HtmlDialog(
                 )
                 HtmlContentView(
                     htmlContent = htmlContent,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).fillMaxWidth()
+                        .heightIn(min = 100.dp)
                 )
                 Button(
                     onClick = onDismiss,

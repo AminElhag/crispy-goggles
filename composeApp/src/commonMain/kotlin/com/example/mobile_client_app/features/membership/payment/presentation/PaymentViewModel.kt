@@ -34,7 +34,7 @@ const val MAX_CVV_LENGTH = 4
 private const val CARD_GROUP_SIZE = 4
 
 class PaymentViewModel(
-    val requestPaymentUseCase: RequestPaymentUseCase
+    private val requestPaymentUseCase: RequestPaymentUseCase
 ) : ViewModel() {
 
     private val _events = MutableStateFlow<PaymentEvent>(PaymentEvent.Reset)
@@ -126,6 +126,7 @@ class PaymentViewModel(
             _events.value = PaymentEvent.ShowSnackbar("Cvv is invalid.")
         } else {
             isLoading = true
+            showErrorDialog = false
             viewModelScope.launch {
                 requestPaymentUseCase.invoke(
                     contractId, cardNumber.text, expirationDate.text, cardCVV.text

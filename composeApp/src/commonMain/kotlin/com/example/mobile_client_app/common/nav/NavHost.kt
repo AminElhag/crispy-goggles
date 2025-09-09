@@ -50,55 +50,6 @@ fun AppNavHost(
                 }
             )
         }
-        /*composable(AppScreen.Registering.route) {
-            RegisteringScreen(
-                onNavigateToBackPage = {
-                    navController.popBackStack()
-                },
-                onNavigateToAdditionInformation = {
-                    navController.navigate(AppScreen.AdditionInformation.route)
-                }
-            )
-        }*/
-        /*composable(AppScreen.Registering.route) {
-            RegisteringScreen(
-                onNavigateToBackPage = {
-                    navController.popBackStack()
-                },
-                onNavigateToAdditionInformation = { personalInfoData ->
-                    RegistrationDataHolder.setPersonalInfoData(personalInfoData)
-                    navController.navigate(AppScreen.AdditionInformation.route)
-                }
-            )
-        }
-        composable(AppScreen.AdditionInformation.route) {
-            val additionalInfoViewModel: AdditionalInfoViewModel = koinViewModel()
-            LaunchedEffect(Unit) {
-                RegistrationDataHolder.getPersonalInfoData()?.let { personalData ->
-                    additionalInfoViewModel.setPersonalInfoData(personalData)
-                }
-            }
-            AdditionInformationScreen(
-                viewModel = additionalInfoViewModel,
-                onNavigateToBackPage = {
-                    navController.popBackStack()
-                },
-                onCreateUserSuccess = {
-                    RegistrationDataHolder.clearData()
-                    navController.navigate(AppScreen.Membership.route)
-                }
-            )
-        }*/
-        /*composable(AppScreen.AdditionInformation.route) {
-            AdditionInformationScreen(
-                onNavigateToBackPage = {
-                    navController.popBackStack()
-                },
-                onCreateUserSuccess = {
-                    navController.navigate(AppScreen.Membership.route)
-                }
-            )
-        }*/
         composable(AppScreen.Registering.route) {
             val dataHolder: RegistrationDataHolder = koinInject()
             RegisteringScreen(

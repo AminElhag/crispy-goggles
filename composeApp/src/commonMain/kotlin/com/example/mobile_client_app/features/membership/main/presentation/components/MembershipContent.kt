@@ -59,11 +59,6 @@ fun MembershipContent(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(Res.string.membership)) },
-                /*navigationIcon = {
-                    IconButton(onClick = onNavigateToBackPage) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }*/
             )
         },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -112,11 +107,6 @@ fun MembershipContent(
                     }
                 }
 
-                /*if (!viewModel.contractOptions.isEmpty()) {
-                    ContractSection(viewModel)
-                }*/
-
-                // Start Date
                 DateSection(
                     datePickerState = datePickerState,
                     hasOutTitle = true,
@@ -135,7 +125,6 @@ fun MembershipContent(
                     cancelString = stringResource(Res.string.cancel)
                 )
 
-                // Promo Code
                 RoundedCornerWithoutBackgroundTextField(
                     value = viewModel.promoCode,
                     onValueChange = { viewModel.updatePromoCode(it) },
