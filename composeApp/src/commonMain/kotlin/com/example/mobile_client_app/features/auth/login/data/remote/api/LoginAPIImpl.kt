@@ -15,7 +15,7 @@ class LoginAPIImpl(private val httpClient: HttpClient) : LoginAPI {
         password: String
     ): Result<LoginResponse, NetworkError> {
         val response = try {
-            httpClient.post("/api/v1/client/login") {
+            httpClient.post("/api/auth/login") {
                 setBody(mapOf("username" to emailOrPhone, "password" to password))
             }
         } catch (e: NetworkError) {

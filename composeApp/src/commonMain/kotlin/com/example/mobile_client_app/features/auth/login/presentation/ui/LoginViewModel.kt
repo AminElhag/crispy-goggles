@@ -4,10 +4,14 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mobile_client_app.common.TOKEN_KEY
 import com.example.mobile_client_app.common.countryPicker.Country
 import com.example.mobile_client_app.features.auth.login.domain.usecase.LoginUseCase
+import com.example.mobile_client_app.features.auth.registering.presentaion.additionInformation.AdditionalInfoEvent
 import com.example.mobile_client_app.util.network.checkInternetConnection
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess
@@ -23,7 +27,8 @@ sealed interface LoginEvent {
 }
 
 class LoginViewModel(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
     var emailOrPhone by mutableStateOf("")
     var isLoading by mutableStateOf(false)
@@ -58,9 +63,15 @@ class LoginViewModel(
                 setEmailOrPhone()
                 isLoading = true
                 loginUseCase.invoke(emailOrPhone, password)
-                    .onSuccess {
+                    .onSuccess { response ->
                         isLoading = false
                         _events.value = LoginEvent.Reset
+                        dataStore.updateData {
+                            it.toMutablePreferences().apply {
+                                set(TOKEN_KEY, response.accessToken!!)
+                            }
+                        }
+                        _events.value = LoginEvent.Login
                     }
                     .onError {
                         isLoading = false

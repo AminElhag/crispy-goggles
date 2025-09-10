@@ -10,7 +10,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val loginModule = module {
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(),get()) }
     single { LoginUseCase(get()) }
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<LoginAPI> { LoginAPIImpl(get()) }
