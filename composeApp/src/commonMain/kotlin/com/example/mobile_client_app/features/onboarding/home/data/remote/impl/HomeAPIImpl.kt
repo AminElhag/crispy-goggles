@@ -15,7 +15,7 @@ class HomeAPIImpl(
 ) : HomeAPI {
     override suspend fun getNotificationCount(): Result<Int, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/notifications/count")
+            httpClient.get("/api/notifications/count")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
@@ -33,7 +33,7 @@ class HomeAPIImpl(
 
     override suspend fun getBanners(): Result<List<BannerResponse>, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/banners")
+            httpClient.get("/api/banners")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
@@ -51,7 +51,7 @@ class HomeAPIImpl(
 
     override suspend fun getUpcomingClasses(): Result<List<ClassResponse>, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/classes/upcoming")
+            httpClient.get("/api/classes/upcoming")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {

@@ -69,6 +69,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.koin.compose.viewmodel.nav)
             implementation(libs.konnection)
+            implementation("com.valentinilk.shimmer:compose-shimmer:1.2.0")
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
