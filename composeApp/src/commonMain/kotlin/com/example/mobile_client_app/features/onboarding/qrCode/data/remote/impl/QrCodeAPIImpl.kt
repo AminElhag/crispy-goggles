@@ -14,7 +14,7 @@ class QrCodeAPIImpl(
 ) : QrCodeAPI {
     override suspend fun getQrCodeData(): Result<QrCodeDataResponse, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/client/qrCode")
+            httpClient.get("/api/profile/qr-code")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {

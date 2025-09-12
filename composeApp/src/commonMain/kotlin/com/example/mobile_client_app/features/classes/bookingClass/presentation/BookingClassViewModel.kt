@@ -30,7 +30,7 @@ class BookingClassViewModel(
     private val _uiState = MutableStateFlow(BookingClassScreenUiState())
     val uiState: StateFlow<BookingClassScreenUiState> = _uiState.asStateFlow()
 
-    var classId = mutableStateOf<Int?>(null)
+    var classId = mutableStateOf<Long?>(null)
         private set
 
     fun getClassDetails() {
@@ -52,7 +52,7 @@ class BookingClassViewModel(
         getClassDetails()
     }
 
-    fun setClassId(classId: Int) {
+    fun setClassId(classId: Long) {
         this.classId.value = classId
         getClassDetails()
     }

@@ -38,7 +38,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun BookingClassScreen(
     viewModel: BookingClassViewModel = koinViewModel(),
-    classId: Int,
+    classId: Long,
     onCancelBookingClick: () -> Unit,
     onConfirmClick:() -> Unit,
 ) {

@@ -8,7 +8,7 @@ class SendBookingClassRequestUseCase(
     private val repository: ClassRepository
 ) {
     suspend operator fun invoke(
-        classId: Int
+        classId: Long
     ): Result<Unit, NetworkError> {
         return repository.sendBookingClassRequest(classId)
     }

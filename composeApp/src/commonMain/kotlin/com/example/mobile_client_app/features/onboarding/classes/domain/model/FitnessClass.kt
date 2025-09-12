@@ -1,7 +1,7 @@
 package com.example.mobile_client_app.features.onboarding.classes.domain.model
 
 data class FitnessClass(
-    val id: Int,
+    val id: Long,
     val name: String,
     val time: String,
     val trainer: String,

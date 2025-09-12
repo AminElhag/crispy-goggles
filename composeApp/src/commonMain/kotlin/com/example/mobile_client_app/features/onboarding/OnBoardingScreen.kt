@@ -30,7 +30,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 fun OnBoardingScreen(
     onNotificationsClick: () -> Unit,
     onLogoutTrigger: () -> Unit,
-    onClassClick: (id: Int) -> Unit,
+    onClassClick: (id: Long) -> Unit,
     onAddAppointmentClick: () -> Unit,
 ) {
     var selectedScreen by remember { mutableStateOf(Screen.Home.route) }

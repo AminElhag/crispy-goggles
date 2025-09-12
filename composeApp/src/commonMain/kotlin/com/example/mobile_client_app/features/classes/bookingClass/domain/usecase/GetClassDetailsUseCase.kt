@@ -9,7 +9,7 @@ class GetClassDetailsUseCase(
     private val repository: ClassRepository
 ) {
     suspend operator fun invoke(
-        classId: Int,
+        classId: Long,
     ): Result<ClassDetailsResponse, NetworkError> {
         return repository.getClassDetails(
             classId = classId,

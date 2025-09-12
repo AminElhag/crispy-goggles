@@ -14,7 +14,7 @@ class ProfileAPIImpl(
 ) : ProfileAPI {
     override suspend fun getProfile(): Result<ProfileResponse, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/client/profile")
+            httpClient.get("/api/profile")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
@@ -33,7 +33,7 @@ class ProfileAPIImpl(
 
     override suspend fun sendFreezingRequest(freezingRequest: FreezingRequest): Result<Unit, NetworkError> {
         val response = try {
-            httpClient.post("/api/v1/membership/freezing") {
+            httpClient.post("/api/membership/freeze") {
                 setBody(freezingRequest)
             }
         } catch (e: NetworkError) {

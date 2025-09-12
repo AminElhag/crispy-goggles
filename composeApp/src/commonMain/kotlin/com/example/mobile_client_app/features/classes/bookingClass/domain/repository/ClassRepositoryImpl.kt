@@ -8,11 +8,11 @@ import com.example.mobile_client_app.util.network.Result
 class ClassRepositoryImpl(
     private val api: ClassesApi
 ) : ClassRepository {
-    override suspend fun getClassDetails(classId: Int): Result<ClassDetailsResponse, NetworkError> {
+    override suspend fun getClassDetails(classId: Long): Result<ClassDetailsResponse, NetworkError> {
         return api.getClassDetails(classId=classId)
     }
 
-    override suspend fun sendBookingClassRequest(classId: Int): Result<Unit, NetworkError> {
+    override suspend fun sendBookingClassRequest(classId: Long): Result<Unit, NetworkError> {
         return api.sendBookingClassRequest(classId)
     }
 }

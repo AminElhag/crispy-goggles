@@ -5,6 +5,6 @@ import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.Result
 
 interface ClassRepository {
-    suspend fun getClassDetails(classId: Int): Result<ClassDetailsResponse, NetworkError>
-    suspend fun sendBookingClassRequest(classId: Int): Result<Unit, NetworkError>
+    suspend fun getClassDetails(classId: Long): Result<ClassDetailsResponse, NetworkError>
+    suspend fun sendBookingClassRequest(classId: Long): Result<Unit, NetworkError>
 }

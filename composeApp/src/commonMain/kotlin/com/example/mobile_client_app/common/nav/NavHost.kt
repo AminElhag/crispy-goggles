@@ -145,7 +145,7 @@ fun AppNavHost(
             )
         }
         composable(AppScreen.ClassDetail.route + "/{classId}") { backStackEntry ->
-            val classId = backStackEntry.savedStateHandle.get<String>("classId")?.toIntOrNull() ?: return@composable
+            val classId = backStackEntry.savedStateHandle.get<String>("classId")?.toLongOrNull() ?: return@composable
             BookingClassScreen(
                 classId = classId,
                 onCancelBookingClick = {
