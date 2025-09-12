@@ -18,7 +18,7 @@ class PersonalTrainerApiImpl(
 ) : PersonalTrainerApi {
     override suspend fun getTrainers(): Result<List<TrainerResponse>, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/personalTraining/trainers")
+            httpClient.get("/api/personal-trainer/trainers")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
@@ -41,7 +41,7 @@ class PersonalTrainerApiImpl(
         selectedSpecializationTypeId: Int
     ): Result<List<AvailableTimeResponse>, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/personalTraining/training/availableTime") {
+            httpClient.get("/api/personal-trainer/available-time") {
                 parameter("trainer_id", trainerId)
                 parameter("training_type_id", trainingTypeId)
                 parameter("selected_date", selectedDate)
@@ -67,7 +67,7 @@ class PersonalTrainerApiImpl(
         trainingTypeId: Int?
     ): Result<List<TrainingSpecializationResponse>, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/personalTraining/training/specializations") {
+            httpClient.get("/api/personal-trainer/training-specialization") {
                 parameter("trainer_id", trainerId)
                 trainingTypeId?.let { parameter("training_type_id", trainingTypeId) }
 

@@ -20,7 +20,7 @@ class AppointmentApiImpl(
 ) : AppointmentApi {
     override suspend fun getAppointments(): Result<List<AppointmentResponse>, NetworkError> {
         val response = try {
-            httpClient.get("/api/v1/personalTraining/appointments")
+            httpClient.get("/api/personal-trainer/appointments")
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
@@ -38,7 +38,7 @@ class AppointmentApiImpl(
 
     override suspend fun cancelAppointment(request: CancelAppointmentRequest): Result<Unit, NetworkError> {
         val response = try {
-            httpClient.post("/api/v1/appointment/cancel"){
+            httpClient.post("/api/personal-trainer/appointments/cancel"){
                 setBody(request)
             }
         } catch (e: NetworkError) {
@@ -58,7 +58,7 @@ class AppointmentApiImpl(
 
     override suspend fun requestAppointment(requestAppointmentRequest: RequestAppointmentRequest): Result<Unit, NetworkError> {
         val response = try {
-            httpClient.post("/api/v1/personalTraining/appointments"){
+            httpClient.post("/api/personal-trainer/appointments/request"){
                 setBody(requestAppointmentRequest)
             }
         } catch (e: NetworkError) {
