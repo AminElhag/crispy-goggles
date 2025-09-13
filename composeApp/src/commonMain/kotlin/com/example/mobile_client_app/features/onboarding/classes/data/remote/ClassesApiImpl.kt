@@ -5,6 +5,7 @@ import com.example.mobile_client_app.features.onboarding.classes.data.model.Book
 import com.example.mobile_client_app.features.onboarding.classes.data.model.FitnessClassResponse
 import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.Result
+import com.example.mobile_client_app.util.network.convertToNetworkError
 import com.example.mobile_client_app.util.network.toException
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -22,7 +23,7 @@ class ClassesApiImpl(
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
-            return Result.Error(NetworkError.UnknownError(e))
+            return Result.Error(convertToNetworkError(e))
         }
         return when (response.status.value) {
             in 200..299 -> {
@@ -43,7 +44,7 @@ class ClassesApiImpl(
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
-            return Result.Error(NetworkError.UnknownError(e))
+            return Result.Error(convertToNetworkError(e))
         }
         return when (response.status.value) {
             in 200..299 -> {
@@ -63,7 +64,7 @@ class ClassesApiImpl(
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
-            return Result.Error(NetworkError.UnknownError(e))
+            return Result.Error(convertToNetworkError(e))
         }
         return when (response.status.value) {
             in 200..299 -> {

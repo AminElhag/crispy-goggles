@@ -22,6 +22,7 @@ sealed class NetworkError(
     data class Conflict(val serverMessage: String?) : NetworkError(serverMessage ?: "Data conflict", 409)
     data class PayloadTooLarge(val serverMessage: String?) : NetworkError(serverMessage ?: "File too large", 413)
     data class TooManyRequests(val serverMessage: String?) : NetworkError(serverMessage ?: "Too many attempts", 429)
+    data class ServerUnavailable(val serverMessage: String?) : NetworkError(serverMessage ?: "Server is currently unavailable. Please try again later.")
 
     // Server errors (5xx)
     data class InternalServerError(val serverMessage: String?) : NetworkError(serverMessage ?: "Server error", 500)
@@ -122,8 +123,35 @@ suspend fun convertToNetworkError(e: Exception): NetworkError {
         is ClientRequestException -> e.response.toException()
         is ServerResponseException -> e.response.toException()
         is HttpRequestTimeoutException -> NetworkError.RequestTimeout(null)
-        is IOException -> NetworkError.NoInternet(null)
+        is IOException -> {
+            // Handle specific connection issues
+            when {
+                e.message?.contains("Could not connect to the server", ignoreCase = true) == true ||
+                        e.message?.contains("Failed to connect to", ignoreCase = true) == true ||
+                        e.message?.contains("Connection refused", ignoreCase = true) == true ||
+                        e.message?.contains("NSURLErrorDomain Code=-1004", ignoreCase = true) == true ||
+                        e.message?.contains("ConnectException", ignoreCase = true) == true -> {
+                    NetworkError.ServerUnavailable(null)
+                }
+                e.message?.contains("UnknownHostException", ignoreCase = true) == true ||
+                        e.message?.contains("Name or service not known", ignoreCase = true) == true -> {
+                    NetworkError.NoInternet(null)
+                }
+                else -> NetworkError.NoInternet(null) // Default for other IO exceptions
+            }
+        }
         is SerializationException -> NetworkError.CustomError("Data parsing error")
-        else -> NetworkError.UnknownError(e)
+        else -> {
+            // Handle other connection-related exceptions that might not be IOException
+            when {
+                e.message?.contains("Could not connect to the server", ignoreCase = true) == true ||
+                        e.message?.contains("Failed to connect to", ignoreCase = true) == true ||
+                        e.message?.contains("Connection refused", ignoreCase = true) == true ||
+                        e.message?.contains("NSURLErrorDomain Code=-1004", ignoreCase = true) == true -> {
+                    NetworkError.ServerUnavailable(null)
+                }
+                else -> convertToNetworkError(e)
+            }
+        }
     }
 }

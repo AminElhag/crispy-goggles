@@ -4,6 +4,7 @@ import com.example.mobile_client_app.features.onboarding.qrCode.data.model.QrCod
 import com.example.mobile_client_app.features.onboarding.qrCode.data.remote.QrCodeAPI
 import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.Result
+import com.example.mobile_client_app.util.network.convertToNetworkError
 import com.example.mobile_client_app.util.network.toException
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -18,7 +19,7 @@ class QrCodeAPIImpl(
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
-            return Result.Error(NetworkError.UnknownError(e))
+            return Result.Error(convertToNetworkError(e))
         }
         return when (response.status.value) {
             in 200..299 -> {

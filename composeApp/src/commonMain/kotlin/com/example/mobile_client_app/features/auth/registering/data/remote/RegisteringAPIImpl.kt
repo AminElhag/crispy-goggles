@@ -4,6 +4,7 @@ import com.example.mobile_client_app.features.auth.registering.domain.model.Crea
 import com.example.mobile_client_app.features.auth.registering.domain.model.UserRequest
 import com.example.mobile_client_app.util.network.NetworkError
 import com.example.mobile_client_app.util.network.Result
+import com.example.mobile_client_app.util.network.convertToNetworkError
 import com.example.mobile_client_app.util.network.onError
 import com.example.mobile_client_app.util.network.onSuccess
 import com.example.mobile_client_app.util.network.toException
@@ -24,7 +25,7 @@ class RegisteringAPIImpl(
         } catch (e: NetworkError) {
             return Result.Error(e)
         } catch (e: Exception) {
-            return Result.Error(NetworkError.UnknownError(e))
+            return Result.Error(convertToNetworkError(e))
         }
         return when (response.status.value) {
             in 200..299 -> {
