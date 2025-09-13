@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.mobile_client_app.common.component.millisToDate
 import com.example.mobile_client_app.common.countryPicker.Country
+import com.example.mobile_client_app.features.auth.registering.presentaion.PersonalInfoState
 import com.example.mobile_client_app.util.phoneNumberVerification
 import com.example.mobile_client_app.util.validName
 import com.example.mobile_client_app.util.validNumber
@@ -72,9 +73,42 @@ class PersonalInfoViewModel : ViewModel() {
     var today = Clock.System.now().toEpochMilliseconds()
         private set
 
-    @OptIn(ExperimentalTime::class)
-    var maxDate = Clock.System.now().plus(duration = 7.days).toEpochMilliseconds()
-        private set
+    fun saveCurrentState(): PersonalInfoState {
+        return PersonalInfoState(
+            firstName = firstName,
+            middleName = middleName,
+            lastName = lastName,
+            idNumber = idNumber,
+            dataOfBirth = dataOfBirth,
+            showDatePicker = showDatePicker,
+            isMale = isMale,
+            password = password,
+            isPasswordVisible = isPasswordVisible,
+            passwordStrength = passwordStrength,
+            selectedCountry = selectedCountry,
+            isCountrySelectorExpanded = isCountrySelectorExpanded,
+            phoneNumber = phoneNumber,
+            email = email
+        )
+    }
+
+    fun restoreState(state: PersonalInfoState) {
+        firstName = state.firstName
+        middleName = state.middleName
+        lastName = state.lastName
+        idNumber = state.idNumber
+        dataOfBirth = state.dataOfBirth
+        showDatePicker = state.showDatePicker
+        isMale = state.isMale
+        password = state.password
+        isPasswordVisible = state.isPasswordVisible
+        passwordStrength = state.passwordStrength
+        selectedCountry = state.selectedCountry
+        isCountrySelectorExpanded = state.isCountrySelectorExpanded
+        phoneNumber = state.phoneNumber
+        email = state.email
+        updatePasswordStrength() // Recalculate password strength
+    }
 
     fun updateFirstName(newName: String) {
         firstName = validName(newName) ?: return

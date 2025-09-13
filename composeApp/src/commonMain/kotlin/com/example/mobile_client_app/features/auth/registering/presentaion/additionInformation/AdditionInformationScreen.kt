@@ -196,7 +196,9 @@ fun AdditionInformationScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                viewModel.getMedicalConditionsAsString(),
+                                text = viewModel.medicalConditionsDisplayText.ifEmpty {
+                                    stringResource(Res.string.select_any_medical_conditions)
+                                },
                                 style = MaterialTheme.typography.bodySmall,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,

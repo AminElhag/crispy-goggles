@@ -8,6 +8,7 @@ import com.example.mobile_client_app.features.auth.registering.domain.usecase.Cr
 import com.example.mobile_client_app.features.auth.registering.presentaion.RegistrationDataHolder
 import com.example.mobile_client_app.features.auth.registering.presentaion.additionInformation.AdditionalInfoViewModel
 import com.example.mobile_client_app.features.auth.registering.presentaion.registering.PersonalInfoViewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val registeringModule = module {
@@ -17,4 +18,6 @@ val registeringModule = module {
     single<CreateUserRepository> { CreateUserRepositoryImpl(get()) }
     single<RegisteringAPI> { RegisteringAPIImpl(get()) }
     single { RegistrationDataHolder }
+
+
 }

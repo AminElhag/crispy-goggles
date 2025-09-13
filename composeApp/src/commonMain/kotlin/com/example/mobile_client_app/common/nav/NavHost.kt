@@ -1,6 +1,7 @@
 package com.example.mobile_client_app.common.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -15,6 +16,8 @@ import com.example.mobile_client_app.features.auth.login.presentation.ui.LoginSc
 import com.example.mobile_client_app.features.auth.registering.presentaion.RegistrationDataHolder
 import com.example.mobile_client_app.features.auth.registering.presentaion.additionInformation.AdditionInformationScreen
 import com.example.mobile_client_app.features.auth.registering.presentaion.additionInformation.AdditionalInfoViewModel
+import com.example.mobile_client_app.features.auth.registering.presentaion.registering.PersonalInfoData
+import com.example.mobile_client_app.features.auth.registering.presentaion.registering.PersonalInfoViewModel
 import com.example.mobile_client_app.features.auth.registering.presentaion.registering.RegisteringScreen
 import com.example.mobile_client_app.features.classes.bookingClass.presentation.BookingClassScreen
 import com.example.mobile_client_app.features.membership.main.domain.model.CheckoutInitResponse
@@ -27,7 +30,10 @@ import com.example.mobile_client_app.features.personalTraining.trainerSelection.
 import kotlinx.serialization.json.Json
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
+import kotlin.time.ExperimentalTime
 
+@OptIn(KoinExperimentalAPI::class, ExperimentalTime::class)
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController()
@@ -50,14 +56,36 @@ fun AppNavHost(
                 }
             )
         }
+
         composable(AppScreen.Registering.route) {
+            val viewModel: PersonalInfoViewModel = koinViewModel()
             val dataHolder: RegistrationDataHolder = koinInject()
+
+            // Restore state when entering the screen
+            LaunchedEffect(Unit) {
+                dataHolder.getPersonalInfoState()?.let { savedState ->
+                    viewModel.restoreState(savedState)
+                }
+            }
+
+            // Save state when leaving the screen
+            DisposableEffect(Unit) {
+                onDispose {
+                    val currentState = viewModel.saveCurrentState()
+                    dataHolder.setPersonalInfoState(currentState)
+                }
+            }
+
             RegisteringScreen(
+                viewModel = viewModel,
                 onNavigateToBackPage = {
                     navController.popBackStack()
                 },
                 onNavigateToAdditionInformation = { personalInfoData ->
-                    dataHolder.setPersonalInfoData(personalInfoData)
+                    // Save current state before navigating
+                    val currentState = viewModel.saveCurrentState()
+                    dataHolder.setPersonalInfoState(currentState)
+
                     navController.navigate(AppScreen.AdditionInformation.route)
                 }
             )
@@ -68,8 +96,34 @@ fun AppNavHost(
             val dataHolder: RegistrationDataHolder = koinInject()
 
             LaunchedEffect(Unit) {
-                dataHolder.getPersonalInfoData()?.let { personalData ->
-                    additionalInfoViewModel.setPersonalInfoData(personalData)
+                // Get personal info from saved state (not from navigation parameter)
+                dataHolder.getPersonalInfoState()?.let { personalState ->
+                    val personalInfoData = PersonalInfoData(
+                        firstName = personalState.firstName,
+                        middleName = personalState.middleName,
+                        lastName = personalState.lastName,
+                        idNumber = personalState.idNumber,
+                        dataOfBirth = personalState.dataOfBirth,
+                        isMale = personalState.isMale,
+                        selectedCountry = personalState.selectedCountry,
+                        phoneNumber = personalState.phoneNumber,
+                        email = personalState.email,
+                        password = personalState.password
+                    )
+                    additionalInfoViewModel.setPersonalInfoData(personalInfoData)
+                }
+
+                // Restore additional info state if available
+                dataHolder.getAdditionalInfoState()?.let { savedState ->
+                    additionalInfoViewModel.restoreState(savedState)
+                }
+            }
+
+            // Save state when leaving the screen
+            DisposableEffect(Unit) {
+                onDispose {
+                    val currentState = additionalInfoViewModel.saveCurrentState()
+                    dataHolder.setAdditionalInfoState(currentState)
                 }
             }
 
@@ -84,6 +138,7 @@ fun AppNavHost(
                 }
             )
         }
+
         composable(AppScreen.Membership.route) {
             MembershipScreen(
                 onNavigateToBackPage = {
